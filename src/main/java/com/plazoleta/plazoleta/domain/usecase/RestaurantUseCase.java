@@ -2,14 +2,14 @@ package com.plazoleta.plazoleta.domain.usecase;
 
 import com.plazoleta.plazoleta.domain.api.IRestaurantServicePort;
 import com.plazoleta.plazoleta.domain.enums.RoleEnum;
-import com.plazoleta.plazoleta.domain.exception.InvalidPhoneNumberException;
-import com.plazoleta.plazoleta.domain.exception.InvalidRestaurantNameException;
-import com.plazoleta.plazoleta.domain.exception.UserIsNotRestaurantOwnerException;
+import com.plazoleta.plazoleta.domain.exception.*;
 import com.plazoleta.plazoleta.domain.model.Restaurant;
 import com.plazoleta.plazoleta.domain.model.external.User;
 import com.plazoleta.plazoleta.domain.spi.IRestaurantPersistencePort;
 import com.plazoleta.plazoleta.domain.spi.IUserConnectionPort;
 import lombok.RequiredArgsConstructor;
+
+import java.util.Optional;
 
 import static com.plazoleta.plazoleta.domain.util.Constants.NAME_NOT_ONLY_NUMBERS_REGEX;
 import static com.plazoleta.plazoleta.domain.util.ExceptionConstants.NUMBER_PREFIX;
@@ -26,8 +26,6 @@ public class RestaurantUseCase implements IRestaurantServicePort {
         validatePhoneNumber(restaurant.getPhone());
         validateRestaurantName(restaurant.getName());
         ensureUserIsRestaurantOwner(restaurant.getOwnerId());
-
-
         restaurantPersistencePort.saveRestaurant(restaurant);
     }
 
@@ -43,14 +41,15 @@ public class RestaurantUseCase implements IRestaurantServicePort {
         }
     }
 
-    private void ensureUserIsRestaurantOwner(Long userId){
-        User user = userConnectionPort.findUserById(userId);
+    private void ensureUserIsRestaurantOwner(Long userId) {
+        User user = userConnectionPort.findUserById(userId)
+                .orElseThrow(UserDoesNotExistException::new);
 
-        if(!RoleEnum.OWNER.getName().equals(user.getRole().getName())){
-           throw new UserIsNotRestaurantOwnerException();
+        if (!RoleEnum.OWNER.getNameBd().equals(user.getRole().getName())) {
+            throw new UserIsNotRestaurantOwnerException();
         }
-
     }
+
 
     private void validateRestaurantName(String name) {
         if (name == null || name.trim().isEmpty()) {

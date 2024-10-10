@@ -16,6 +16,12 @@ public class ExceptionConstants {
     public static final String INVALID_RESTAURANT_NAME_ERROR = "INVALID_RESTAURANT_NAME";
     public static final String INVALID_RESTAURANT_NAME_MESSAGE = "Restaurant name cannot consist only of numbers.";
 
+    public static final String EXTERNAL_CONNECTION_ERROR = "External connection error";
+    public static final String EXTERNAL_CONNECTION_MESSAGE = "We cannot connect with an required external service please try more later.";
+
+    public static final String USER_DOESNOT_EXIST_ERROR = "User not found";
+    public static final String USER_DOESNOT_EXIST_MESSAGE = "We cannot found the user do you want to use.";
+
 
 }
 

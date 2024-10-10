@@ -3,6 +3,7 @@ package com.plazoleta.plazoleta.domain.usecase;
 
 import com.plazoleta.plazoleta.domain.enums.RoleEnum;
 import com.plazoleta.plazoleta.domain.exception.InvalidPhoneNumberException;
+import com.plazoleta.plazoleta.domain.exception.InvalidRestaurantNameException;
 import com.plazoleta.plazoleta.domain.exception.UserIsNotRestaurantOwnerException;
 import com.plazoleta.plazoleta.domain.model.Restaurant;
 import com.plazoleta.plazoleta.domain.model.external.Role;
@@ -18,6 +19,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -48,14 +50,14 @@ class RestaurantUseCaseTest {
 
         validRestaurant = new Restaurant("Pizza Pro", 99999L, "Esquina 49 diagonal 9", "+573026468094", "logo.png", 1L);
 
-        Role role = new Role(RoleEnum.OWNER.getId(), RoleEnum.OWNER.getName());
+        Role role = new Role(RoleEnum.OWNER.getId(), RoleEnum.OWNER.getNameBd());
         userOwner = new User(role);
     }
 
     @Test
     public void createRestaurant_WhenCalledWithValidData_DoesNotReturnException(){
 
-        when(userConnectionPort.findUserById(validRestaurant.getOwnerId())).thenReturn(userOwner);
+        when(userConnectionPort.findUserById(validRestaurant.getOwnerId())).thenReturn(Optional.ofNullable(userOwner));
 
         assertDoesNotThrow(() -> restaurantUseCase.createRestaurant(validRestaurant));
     }
@@ -85,9 +87,16 @@ class RestaurantUseCaseTest {
         User userNotOwner = userOwner;
         userNotOwner.setRole(new Role(RoleEnum.ADMINISTRATOR.getId(), RoleEnum.ADMINISTRATOR.getName()));
 
-        when(userConnectionPort.findUserById(validRestaurant.getOwnerId())).thenReturn(userNotOwner);
+        when(userConnectionPort.findUserById(validRestaurant.getOwnerId())).thenReturn(Optional.of(userNotOwner));
 
         assertThrows(UserIsNotRestaurantOwnerException.class, () -> restaurantUseCase.createRestaurant(validRestaurant));
+    }
+
+    @Test
+    public void createRestaurant_WhenCalledWithInvalidRestaurantName_ReturnException(){
+        Restaurant invalidRestaurant = validRestaurant;
+        invalidRestaurant.setName("999999999");
+        assertThrows(InvalidRestaurantNameException.class, () -> restaurantUseCase.createRestaurant(validRestaurant));
     }
 
 }
