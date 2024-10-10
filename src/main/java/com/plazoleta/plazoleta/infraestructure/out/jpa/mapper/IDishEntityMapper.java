@@ -26,5 +26,7 @@ public interface IDishEntityMapper {
         return restaurant;
     }
 
+    @Mapping(source = "restaurant.id", target = "restaurantId")
     Dish toModel(DishEntity dish);
+
 }

@@ -28,5 +28,8 @@ public class ExceptionConstants {
     public static final String RESTAURANT_NOT_FOUND_ERROR = "The restaurant cannot be founded";
     public static final String RESTAURANT_NOT_FOUND_ERROR_MESSAGE = "That restaurant cannot be founded.";
 
+    public static final String DISH_NOT_FOUND_ERROR = "The dish cannot be founded";
+    public static final String DISH_NOT_FOUND_ERROR_MESSAGE = "That dish cannot be founded.";
+
 }
 

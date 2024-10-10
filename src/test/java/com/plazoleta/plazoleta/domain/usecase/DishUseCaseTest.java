@@ -4,6 +4,7 @@ package com.plazoleta.plazoleta.domain.usecase;
 import com.plazoleta.plazoleta.domain.enums.RoleEnum;
 import com.plazoleta.plazoleta.domain.exception.RestaurantNotFoundException;
 import com.plazoleta.plazoleta.domain.exception.UnauthorizedAccessException;
+import com.plazoleta.plazoleta.domain.exception.UserIsNotRestaurantOwnerException;
 import com.plazoleta.plazoleta.domain.model.Dish;
 import com.plazoleta.plazoleta.domain.model.Restaurant;
 import com.plazoleta.plazoleta.domain.model.external.Role;
@@ -93,6 +94,31 @@ public class DishUseCaseTest {
     }
 
 
+    @Test
+    public void updateDish_WhenCalledWithValidInfo_DoesNotReturnException(){
+        Integer newPrice = 200;
+        String newDescription = "New Description";
+
+        when(restaurantPersistencePort.findRestaurantById(validDish.getRestaurantId())).thenReturn(Optional.ofNullable(validRestaurant));
+        when(dishPersistencePort.findDishById(validDish.getId())).thenReturn(Optional.ofNullable(validDish));
+        when(userAuthenticationPort.getAuthenticatedUser()).thenReturn(userOwner);
+
+        assertDoesNotThrow(() -> dishUseCase.updateDish(validDish.getId(), newPrice, newDescription));
+    }
+
+    @Test
+    public void updateDish_WhenCalledByAnUserIsNotTheOwner_ReturnException(){
+        User userNotOwnerOfRestaurant = userOwner;
+        userNotOwnerOfRestaurant.setId(userOwner.getId() + 1);
+        Integer newPrice = 200;
+        String newDescription = "New Description";
+
+        when(restaurantPersistencePort.findRestaurantById(validDish.getRestaurantId())).thenReturn(Optional.ofNullable(validRestaurant));
+        when(dishPersistencePort.findDishById(validDish.getId())).thenReturn(Optional.ofNullable(validDish));
+        when(userAuthenticationPort.getAuthenticatedUser()).thenReturn(userNotOwnerOfRestaurant);
+
+        assertThrows(UnauthorizedAccessException.class, () -> dishUseCase.updateDish(validDish.getId(), newPrice, newDescription));
+    }
 
 
 }
