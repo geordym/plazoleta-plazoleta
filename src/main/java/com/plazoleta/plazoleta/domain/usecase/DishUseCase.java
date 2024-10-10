@@ -24,11 +24,6 @@ public class DishUseCase implements IDishServicePort {
         dishPersistencePort.saveDish(dish);
     }
 
-    //TODO: Check the name of that method
-    private Restaurant verifyRestaurantExists(Long restaurantId) {
-        return restaurantPersistencePort.findRestaurantById(restaurantId)
-                .orElseThrow(RestaurantNotFoundException::new);
-    }
 
     private void verifyOwnerAccess(Long restaurantId) {
         User authenticatedOwner = userAuthenticationPort.getAuthenticatedUser();
@@ -39,5 +34,10 @@ public class DishUseCase implements IDishServicePort {
         }
     }
 
+    //TODO: Check the name of that method
+    private Restaurant verifyRestaurantExists(Long restaurantId) {
+        return restaurantPersistencePort.findRestaurantById(restaurantId)
+                .orElseThrow(RestaurantNotFoundException::new);
+    }
 
 }
