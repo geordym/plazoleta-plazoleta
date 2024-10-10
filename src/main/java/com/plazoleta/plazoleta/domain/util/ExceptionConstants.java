@@ -22,6 +22,11 @@ public class ExceptionConstants {
     public static final String USER_DOESNOT_EXIST_ERROR = "User not found";
     public static final String USER_DOESNOT_EXIST_MESSAGE = "We cannot found the user do you want to use.";
 
+    public static final String UNAUTHORIZATED_ACCESS_ERROR = "Unauthorized access error";
+    public static final String UNAUTHORIZATED_ACCESS_ERROR_MESSAGE = "You cannot access to this resource, that can be because you have not permission to modify that restaurant.";
+
+    public static final String RESTAURANT_NOT_FOUND_ERROR = "The restaurant cannot be founded";
+    public static final String RESTAURANT_NOT_FOUND_ERROR_MESSAGE = "That restaurant cannot be founded.";
 
 }
 

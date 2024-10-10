@@ -11,11 +11,27 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class DomainExceptionHandler {
 
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    public ResponseEntity<ErrorGenericResponseDto> handleRUnauthorizedAccessException(UnauthorizedAccessException ex){
+        ErrorGenericResponseDto errorGenericResponseDto = new ErrorGenericResponseDto(ex.getError(), ex.getMessage(), ex.getTimestamps());
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(errorGenericResponseDto);
+    }
+
+    @ExceptionHandler(RestaurantNotFoundException.class)
+    public ResponseEntity<ErrorGenericResponseDto> handleRestaurantNotFoundException(RestaurantNotFoundException ex){
+        ErrorGenericResponseDto errorGenericResponseDto = new ErrorGenericResponseDto(ex.getError(), ex.getMessage(), ex.getTimestamps());
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(errorGenericResponseDto);
+    }
+
     @ExceptionHandler(UserIsNotRestaurantOwnerException.class)
     public ResponseEntity<ErrorGenericResponseDto> handleUserIsNotRestaurantOwnerException(UserIsNotRestaurantOwnerException ex){
         ErrorGenericResponseDto errorGenericResponseDto = new ErrorGenericResponseDto(ex.getError(), ex.getMessage(), ex.getTimestamps());
         return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
+                .status(HttpStatus.UNAUTHORIZED)
                 .body(errorGenericResponseDto);
     }
 

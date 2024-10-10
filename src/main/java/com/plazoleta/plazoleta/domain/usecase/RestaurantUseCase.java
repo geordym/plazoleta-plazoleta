@@ -3,6 +3,7 @@ package com.plazoleta.plazoleta.domain.usecase;
 import com.plazoleta.plazoleta.domain.api.IRestaurantServicePort;
 import com.plazoleta.plazoleta.domain.enums.RoleEnum;
 import com.plazoleta.plazoleta.domain.exception.*;
+import com.plazoleta.plazoleta.domain.model.Dish;
 import com.plazoleta.plazoleta.domain.model.Restaurant;
 import com.plazoleta.plazoleta.domain.model.external.User;
 import com.plazoleta.plazoleta.domain.spi.IRestaurantPersistencePort;
@@ -21,6 +22,8 @@ public class RestaurantUseCase implements IRestaurantServicePort {
     private final IRestaurantPersistencePort restaurantPersistencePort;
     private final IUserConnectionPort userConnectionPort;
 
+
+
     @Override
     public void createRestaurant(Restaurant restaurant) {
         validatePhoneNumber(restaurant.getPhone());
@@ -28,6 +31,8 @@ public class RestaurantUseCase implements IRestaurantServicePort {
         ensureUserIsRestaurantOwner(restaurant.getOwnerId());
         restaurantPersistencePort.saveRestaurant(restaurant);
     }
+
+
 
     private void validatePhoneNumber(String phoneNumber){
         boolean hasInitialSymbol = phoneNumber.startsWith(NUMBER_PREFIX);
