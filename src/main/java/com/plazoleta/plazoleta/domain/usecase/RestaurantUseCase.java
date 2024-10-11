@@ -6,6 +6,8 @@ import com.plazoleta.plazoleta.domain.exception.*;
 import com.plazoleta.plazoleta.domain.model.Dish;
 import com.plazoleta.plazoleta.domain.model.Restaurant;
 import com.plazoleta.plazoleta.domain.model.external.User;
+import com.plazoleta.plazoleta.domain.model.pagination.PaginationCustom;
+import com.plazoleta.plazoleta.domain.model.pagination.PaginationParams;
 import com.plazoleta.plazoleta.domain.spi.IRestaurantPersistencePort;
 import com.plazoleta.plazoleta.domain.spi.IUserConnectionPort;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +34,10 @@ public class RestaurantUseCase implements IRestaurantServicePort {
         restaurantPersistencePort.saveRestaurant(restaurant);
     }
 
+    @Override
+    public PaginationCustom<Restaurant> listRestaurants(PaginationParams paginationParams) {
+        return restaurantPersistencePort.findAllRestaurant(paginationParams);
+    }
 
 
     private void validatePhoneNumber(String phoneNumber){

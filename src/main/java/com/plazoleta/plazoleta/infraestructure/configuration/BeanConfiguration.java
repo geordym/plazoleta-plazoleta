@@ -81,7 +81,7 @@ public class BeanConfiguration {
 
     @Bean
     public IPlazoletaHandler plazoletaHandler(){
-        return new PlazoletaHandlerImpl(restaurantServicePort(), restaurantRequestMapper);
+        return new PlazoletaHandlerImpl(restaurantServicePort(), restaurantRequestMapper, restaurantResponseMapper);
     }
 
     @Bean

@@ -40,9 +40,8 @@ public class SecurityConfig {
                     registry.requestMatchers("/api/dish").hasRole(RoleEnum.OWNER.getName());
                     registry.requestMatchers("/api/dish/status").hasRole(RoleEnum.OWNER.getName());
 
-                    registry.requestMatchers("/api/plazoleta/restaurant").hasRole(RoleEnum.ADMINISTRATOR.getName());
-                    registry.requestMatchers("/api/plazoleta/restaurant").hasRole(RoleEnum.ADMINISTRATOR.getName());
-
+                    registry.requestMatchers(HttpMethod.POST,"/api/plazoleta/restaurant").hasRole(RoleEnum.ADMINISTRATOR.getName());
+                    registry.requestMatchers(HttpMethod.GET,"/api/plazoleta/restaurant").permitAll();
                 })
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
