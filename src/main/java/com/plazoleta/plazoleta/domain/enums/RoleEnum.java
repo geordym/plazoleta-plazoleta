@@ -1,6 +1,8 @@
 package com.plazoleta.plazoleta.domain.enums;
 
 
+import com.plazoleta.plazoleta.domain.model.external.Role;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,6 +38,11 @@ public enum RoleEnum {
         return name;
     }
 
+    public Role toModel() {
+        Role role = new Role(this.getId(), this.getName());
+        return role;
+    }
+
     // Método para obtener un Role por su nombre
     public static RoleEnum fromName(String name) {
         for (RoleEnum roleEnum : RoleEnum.values()) {
@@ -55,6 +62,8 @@ public enum RoleEnum {
         }
         throw new IllegalArgumentException("No se encontró el rol con el ID: " + id);
     }
+
+
 
     public static List<RoleEnum> getAllRoles() {
         return Arrays.asList(RoleEnum.values());

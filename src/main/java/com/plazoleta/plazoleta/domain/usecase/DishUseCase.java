@@ -44,14 +44,11 @@ public class DishUseCase implements IDishServicePort {
         dishPersistencePort.saveDish(dish);
     }
 
-
-
-
     private void verifyOwnerAccess(Long restaurantId) {
-        User authenticatedOwner = userAuthenticationPort.getAuthenticatedUser();
+        Long authenticatedOwnerId = userAuthenticationPort.getAuthenticatedUserId();
         Restaurant restaurant = verifyRestaurantExists(restaurantId);
 
-        if (!restaurant.getOwnerId().equals(authenticatedOwner.getId())) {
+        if (!restaurant.getOwnerId().equals(authenticatedOwnerId)) {
             throw new UnauthorizedAccessException();
         }
     }

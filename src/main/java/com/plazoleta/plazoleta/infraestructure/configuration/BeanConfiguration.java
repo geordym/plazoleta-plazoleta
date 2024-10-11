@@ -27,7 +27,7 @@ import com.plazoleta.plazoleta.infraestructure.out.jpa.mapper.IDishEntityMapper;
 import com.plazoleta.plazoleta.infraestructure.out.jpa.mapper.IRestaurantEntityMapper;
 import com.plazoleta.plazoleta.infraestructure.out.jpa.repository.IDishRepository;
 import com.plazoleta.plazoleta.infraestructure.out.jpa.repository.IRestaurantRepository;
-import com.plazoleta.plazoleta.infraestructure.out.auth.UserAuthenticationAdapter;
+import com.plazoleta.plazoleta.infraestructure.adapter.auth.UserAuthenticationAdapter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -61,7 +61,7 @@ public class BeanConfiguration {
 
     @Bean
     public IUserAuthenticationPort userAuthenticationPort(){
-        return new UserAuthenticationAdapter();
+        return new UserAuthenticationAdapter(userConnectionPort());
     }
 
     @Bean
