@@ -48,7 +48,6 @@ public class DishController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-
     @Operation(summary = "Change dish status")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Dish status changed succesfully", content = @Content),
