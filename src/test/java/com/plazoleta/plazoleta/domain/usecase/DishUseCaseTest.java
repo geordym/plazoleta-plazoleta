@@ -1,6 +1,7 @@
 package com.plazoleta.plazoleta.domain.usecase;
 
 
+import com.plazoleta.plazoleta.domain.enums.DishEnumSortBy;
 import com.plazoleta.plazoleta.domain.enums.RoleEnum;
 import com.plazoleta.plazoleta.domain.exception.RestaurantNotFoundException;
 import com.plazoleta.plazoleta.domain.exception.UnauthorizedAccessException;
@@ -9,10 +10,13 @@ import com.plazoleta.plazoleta.domain.model.Dish;
 import com.plazoleta.plazoleta.domain.model.Restaurant;
 import com.plazoleta.plazoleta.domain.model.external.Role;
 import com.plazoleta.plazoleta.domain.model.external.User;
+import com.plazoleta.plazoleta.domain.model.pagination.PaginationCustom;
+import com.plazoleta.plazoleta.domain.model.pagination.PaginationParams;
 import com.plazoleta.plazoleta.domain.spi.IDishPersistencePort;
 import com.plazoleta.plazoleta.domain.spi.IRestaurantPersistencePort;
 import com.plazoleta.plazoleta.domain.spi.IUserAuthenticationPort;
 import com.plazoleta.plazoleta.domain.spi.IUserConnectionPort;
+import com.plazoleta.plazoleta.domain.util.DishFilter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,11 +24,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class DishUseCaseTest {
@@ -42,7 +48,11 @@ public class DishUseCaseTest {
     @Mock
     private IRestaurantPersistencePort restaurantPersistencePort;
 
+
+
     private DishUseCase dishUseCase;
+
+
 
     private Dish validDish;
 
@@ -50,6 +60,11 @@ public class DishUseCaseTest {
 
     private Restaurant validRestaurant;
 
+    @Mock
+    private DishFilter dishFilter;
+
+    @Mock
+    private PaginationParams<DishEnumSortBy> paginationParams;
 
     @BeforeEach
     void setup(){
@@ -64,7 +79,21 @@ public class DishUseCaseTest {
 
     }
 
+    @Test
+    public void testListDishesOfRestaurant_WhenRestaurantExists() {
+        Long restaurantId = 1L;
+        PaginationCustom<Dish> expectedDishes = new PaginationCustom<>(List.of(), 0, 10, 0, 1, true);
 
+        when(restaurantPersistencePort.findRestaurantById(restaurantId)).thenReturn(Optional.of(new Restaurant()));
+
+        when(dishPersistencePort.listDishByRestaurantId(dishFilter, restaurantId, paginationParams)).thenReturn(expectedDishes);
+
+        PaginationCustom<Dish> result = dishUseCase.listDishesOfRestaurant(dishFilter, restaurantId, paginationParams);
+
+        assertThat(result).isEqualTo(expectedDishes);
+        //verify(dishUseCaseMock).verifyRestaurantExists(restaurantId);
+        //verify(dishPersistencePort).listDishByRestaurantId(dishFilter, restaurantId, paginationParams);
+    }
 
     @Test
     public void createDish_WhenCalledWithValidData_DoesNotReturnException(){

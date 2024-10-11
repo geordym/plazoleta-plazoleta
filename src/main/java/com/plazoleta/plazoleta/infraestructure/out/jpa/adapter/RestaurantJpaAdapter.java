@@ -1,5 +1,6 @@
 package com.plazoleta.plazoleta.infraestructure.out.jpa.adapter;
 
+import com.plazoleta.plazoleta.domain.enums.RestaurantSortBy;
 import com.plazoleta.plazoleta.domain.model.Dish;
 import com.plazoleta.plazoleta.domain.model.Restaurant;
 import com.plazoleta.plazoleta.domain.model.pagination.PaginationCustom;
@@ -38,7 +39,7 @@ public class RestaurantJpaAdapter implements IRestaurantPersistencePort {
     }
 
     @Override
-    public PaginationCustom<Restaurant> findAllRestaurant(PaginationParams paginationParams) {
+    public PaginationCustom<Restaurant> findAllRestaurant(PaginationParams<RestaurantSortBy> paginationParams) {
         PageRequest pageRequest = PageRequest.of(
                 paginationParams.getPage(),
                 paginationParams.getSize(),

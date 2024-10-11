@@ -4,8 +4,11 @@ package com.plazoleta.plazoleta.infraestructure.input.rest;
 import com.plazoleta.plazoleta.application.dto.request.CreateDishRequestDto;
 import com.plazoleta.plazoleta.application.dto.request.ToggleDishStatusRequestDto;
 import com.plazoleta.plazoleta.application.dto.request.UpdateDishRequestDto;
+import com.plazoleta.plazoleta.application.dto.response.DishResponseDto;
+import com.plazoleta.plazoleta.application.dto.response.RestaurantShortResponseDto;
 import com.plazoleta.plazoleta.application.handler.IDishHandler;
 import com.plazoleta.plazoleta.domain.api.IDishServicePort;
+import com.plazoleta.plazoleta.domain.model.pagination.PaginationCustom;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -22,6 +25,25 @@ import org.springframework.web.bind.annotation.*;
 public class DishController {
 
     private final IDishHandler dishHandler;
+
+
+    @Operation(summary = "List dishes of restaurant")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved list", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Invalid request parameters", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Restaurant not found", content = @Content),
+    })
+    @GetMapping("/restaurant/{restaurantId}")
+    public ResponseEntity<PaginationCustom<DishResponseDto>> listRestaurants(
+            @RequestParam(value = "category", defaultValue = "") String categoryFilter,
+            @PathVariable("restaurantId") Long restaurantId,
+                                                                                        @RequestParam(defaultValue = "0") int page,
+                                                                                         @RequestParam(defaultValue = "10") int size,
+                                                                                        @RequestParam(defaultValue = "name") String sortBy,
+                                                                                        @RequestParam(defaultValue = "true") boolean ascending){
+        PaginationCustom<DishResponseDto> dishList = dishHandler.listDishesOfResturant(categoryFilter, restaurantId, page, size, sortBy, ascending);
+        return new ResponseEntity<>(dishList, HttpStatus.OK);
+    }
 
 
     @Operation(summary = "Create dish")

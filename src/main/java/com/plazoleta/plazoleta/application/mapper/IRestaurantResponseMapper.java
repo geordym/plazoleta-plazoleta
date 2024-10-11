@@ -27,7 +27,7 @@ public interface IRestaurantResponseMapper {
         pagination.setPageSize(restaurantPaginationCustom.getPageSize());
         pagination.setTotalElements(restaurantPaginationCustom.getTotalElements());
         pagination.setTotalPages(restaurantPaginationCustom.getTotalPages());
-        pagination.setLast(true);
+        pagination.setLast(restaurantPaginationCustom.isLast());
         return pagination;
     }
 

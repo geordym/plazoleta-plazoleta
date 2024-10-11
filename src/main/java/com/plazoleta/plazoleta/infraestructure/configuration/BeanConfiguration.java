@@ -76,7 +76,7 @@ public class BeanConfiguration {
 
     @Bean
     public IDishHandler dishHandler(){
-        return new DishHandlerImpl(dishServicePort(), dishRequestMapper);
+        return new DishHandlerImpl(dishServicePort(), dishRequestMapper, dishResponseMapper);
     }
 
     @Bean

@@ -39,6 +39,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(registry -> {
                     registry.requestMatchers("/api/dish").hasRole(RoleEnum.OWNER.getName());
                     registry.requestMatchers("/api/dish/status").hasRole(RoleEnum.OWNER.getName());
+                    registry.requestMatchers(HttpMethod.GET,"/api/dish/restaurant/*").permitAll();
 
                     registry.requestMatchers(HttpMethod.POST,"/api/plazoleta/restaurant").hasRole(RoleEnum.ADMINISTRATOR.getName());
                     registry.requestMatchers(HttpMethod.GET,"/api/plazoleta/restaurant").permitAll();

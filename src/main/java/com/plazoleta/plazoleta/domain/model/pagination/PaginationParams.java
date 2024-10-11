@@ -7,9 +7,9 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class PaginationParams {
+public class PaginationParams<E extends Enum<E>> {
     private int page;
     private int size;
-    private RestaurantSortBy sortBy;
+    private E sortBy;
     private boolean ascending;
 }
