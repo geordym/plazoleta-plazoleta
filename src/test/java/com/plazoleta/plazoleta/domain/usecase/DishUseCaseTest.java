@@ -69,7 +69,7 @@ public class DishUseCaseTest {
     @Test
     public void createDish_WhenCalledWithValidData_DoesNotReturnException(){
         when(restaurantPersistencePort.findRestaurantById(validDish.getRestaurantId())).thenReturn(Optional.ofNullable(validRestaurant));
-        when(userAuthenticationPort.getAuthenticatedUser()).thenReturn(userOwner);
+        when(userAuthenticationPort.getAuthenticatedUserId()).thenReturn(userOwner.getId());
 
         assertDoesNotThrow(() -> dishUseCase.createDish(validDish));
     }
@@ -77,7 +77,7 @@ public class DishUseCaseTest {
     @Test
     public void createDish_WhenCalledWithRestaurantDoesNotExist_ReturnException(){
         when(restaurantPersistencePort.findRestaurantById(validDish.getRestaurantId())).thenReturn(Optional.empty());
-        when(userAuthenticationPort.getAuthenticatedUser()).thenReturn(userOwner);
+        when(userAuthenticationPort.getAuthenticatedUserId()).thenReturn(userOwner.getId());
 
         assertThrows(RestaurantNotFoundException.class, () -> dishUseCase.createDish(validDish));
     }
@@ -88,7 +88,7 @@ public class DishUseCaseTest {
         userNotOwner.setId(userOwner.getId()+1);
 
         when(restaurantPersistencePort.findRestaurantById(validDish.getRestaurantId())).thenReturn(Optional.ofNullable(validRestaurant));
-        when(userAuthenticationPort.getAuthenticatedUser()).thenReturn(userNotOwner);
+        when(userAuthenticationPort.getAuthenticatedUserId()).thenReturn(userNotOwner.getId());
 
         assertThrows(UnauthorizedAccessException.class, () -> dishUseCase.createDish(validDish));
     }
@@ -101,7 +101,7 @@ public class DishUseCaseTest {
 
         when(restaurantPersistencePort.findRestaurantById(validDish.getRestaurantId())).thenReturn(Optional.ofNullable(validRestaurant));
         when(dishPersistencePort.findDishById(validDish.getId())).thenReturn(Optional.ofNullable(validDish));
-        when(userAuthenticationPort.getAuthenticatedUser()).thenReturn(userOwner);
+        when(userAuthenticationPort.getAuthenticatedUserId()).thenReturn(userOwner.getId());
 
         assertDoesNotThrow(() -> dishUseCase.updateDish(validDish.getId(), newPrice, newDescription));
     }
@@ -115,7 +115,7 @@ public class DishUseCaseTest {
 
         when(restaurantPersistencePort.findRestaurantById(validDish.getRestaurantId())).thenReturn(Optional.ofNullable(validRestaurant));
         when(dishPersistencePort.findDishById(validDish.getId())).thenReturn(Optional.ofNullable(validDish));
-        when(userAuthenticationPort.getAuthenticatedUser()).thenReturn(userNotOwnerOfRestaurant);
+        when(userAuthenticationPort.getAuthenticatedUserId()).thenReturn(userNotOwnerOfRestaurant.getId());
 
         assertThrows(UnauthorizedAccessException.class, () -> dishUseCase.updateDish(validDish.getId(), newPrice, newDescription));
     }
