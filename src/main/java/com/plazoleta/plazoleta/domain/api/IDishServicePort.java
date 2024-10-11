@@ -8,4 +8,6 @@ public interface IDishServicePort {
 
     void updateDish(Long dishId, Integer price, String description);
 
+    void toogleDishStatus(Long dishId, boolean active);
+
 }

@@ -30,6 +30,15 @@ public class DishUseCase implements IDishServicePort {
     }
 
     @Override
+    public void toogleDishStatus(Long dishId, boolean active) {
+        Dish dish = dishPersistencePort.findDishById(dishId).orElseThrow(DishNotFoundException::new);
+        verifyOwnerAccess(dish.getRestaurantId());
+
+        dish.setActive(active);
+        dishPersistencePort.updateDish(dish);
+    }
+
+    @Override
     public void createDish(Dish dish) {
         verifyOwnerAccess(dish.getRestaurantId());
         dishPersistencePort.saveDish(dish);

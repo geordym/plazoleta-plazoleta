@@ -2,6 +2,7 @@ package com.plazoleta.plazoleta.infraestructure.input.rest;
 
 
 import com.plazoleta.plazoleta.application.dto.request.CreateDishRequestDto;
+import com.plazoleta.plazoleta.application.dto.request.ToggleDishStatusRequestDto;
 import com.plazoleta.plazoleta.application.dto.request.UpdateDishRequestDto;
 import com.plazoleta.plazoleta.application.handler.IDishHandler;
 import com.plazoleta.plazoleta.domain.api.IDishServicePort;
@@ -47,6 +48,18 @@ public class DishController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+
+    @Operation(summary = "Change dish status")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Dish status changed succesfully", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Error in the body of the request", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Dont have authorization to modify price dish of that restaurant, ensure you are the owner of the restaurant", content = @Content),
+    })
+    @PatchMapping("/status")
+    private ResponseEntity<Void> toggleDishStatus(@RequestBody @Valid ToggleDishStatusRequestDto updateDishRequestDto){
+        dishHandler.toogleDishStatus(updateDishRequestDto);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 
 }

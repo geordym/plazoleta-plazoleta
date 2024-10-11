@@ -38,6 +38,9 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(registry -> {
                     registry.requestMatchers("/api/dish").hasRole(RoleEnum.OWNER.getName());
+                    registry.requestMatchers("/api/dish/status").hasRole(RoleEnum.OWNER.getName());
+
+                    registry.requestMatchers("/api/plazoleta/restaurant").hasRole(RoleEnum.ADMINISTRATOR.getName());
                     registry.requestMatchers("/api/plazoleta/restaurant").hasRole(RoleEnum.ADMINISTRATOR.getName());
 
                 })
