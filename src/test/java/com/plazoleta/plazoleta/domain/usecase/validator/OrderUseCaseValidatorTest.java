@@ -5,6 +5,7 @@ import com.plazoleta.plazoleta.domain.enums.OrderStatus;
 import com.plazoleta.plazoleta.domain.exception.InvalidDishForRestaurantException;
 import com.plazoleta.plazoleta.domain.exception.OrderAlreadyInProgressException;
 import com.plazoleta.plazoleta.domain.exception.RestaurantNotFoundException;
+import com.plazoleta.plazoleta.domain.model.Dish;
 import com.plazoleta.plazoleta.domain.model.Order;
 import com.plazoleta.plazoleta.domain.model.OrderItem;
 import com.plazoleta.plazoleta.domain.model.Restaurant;
@@ -29,8 +30,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -81,6 +82,12 @@ public class OrderUseCaseValidatorTest {
     @Test
     void testCreateOrder() {
         Order order = DataProvider.getValidOrder();
+        List<Dish> listDishesInOrder = order.getOrderItems().stream().map(OrderItem::getDish).toList();
+
+        when(restaurantPersistencePort.existsRestaurantById(order.getRestaurant().getId())).thenReturn(true);
+        when(orderPersistencePort.hasActiveOrders(order.getCustomerId())).thenReturn(false);
+        when(orderPersistencePort.hasActiveOrders(order.getCustomerId())).thenReturn(false);
+        when(dishPersistencePort.findAllDishByIdAndRestaurantId(anyList(), anyLong())).thenReturn(listDishesInOrder);
 
         assertDoesNotThrow(() -> {
             orderUseCaseValidator.validateCreateOrder(order);
