@@ -8,6 +8,9 @@ import com.plazoleta.plazoleta.domain.model.pagination.PaginationParams;
 
 public interface IRestaurantServicePort {
 
+
+    void makeOrder();
+
     void createRestaurant(Restaurant restaurant);
     PaginationCustom<Restaurant> listRestaurants(PaginationParams<RestaurantSortBy> paginationParams);
 

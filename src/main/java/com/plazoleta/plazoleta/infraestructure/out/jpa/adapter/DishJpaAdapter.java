@@ -72,6 +72,12 @@ public class DishJpaAdapter implements IDishPersistencePort {
 
     }
 
+    @Override
+    public List<Dish> findAllDishByIdAndRestaurantId(List<Long> dishList, Long restaurantId) {
+        List<DishEntity> dishEntityList = dishRepository.findByRestaurantIdAndDishIds(restaurantId, dishList);
+        return dishEntityList.stream().map(dishEntityMapper::toModel).toList();
+    }
+
     private List<Dish> convertToDishList(Page<DishEntity> dishEntityPage) {
         return dishEntityPage.getContent().stream()
                 .map(dishEntityMapper::toModel)

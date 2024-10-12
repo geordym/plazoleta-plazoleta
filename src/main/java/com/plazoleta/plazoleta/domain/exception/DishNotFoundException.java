@@ -8,6 +8,6 @@ public class DishNotFoundException extends ErrorException{
 
 
     public DishNotFoundException() {
-        super(ExceptionConstants.DISH_NOT_FOUND_ERROR, ExceptionConstants.DISH_NOT_FOUND_ERROR, LocalDate.now().toString());
+        super(ExceptionConstants.DISH_NOT_FOUND_ERROR, ExceptionConstants.DISH_NOT_FOUND_ERROR_MESSAGE, LocalDate.now().toString());
     }
 }

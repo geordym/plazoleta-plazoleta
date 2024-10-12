@@ -25,6 +25,10 @@ public class RestaurantUseCase implements IRestaurantServicePort {
     private final IUserConnectionPort userConnectionPort;
 
 
+    @Override
+    public void makeOrder() {
+
+    }
 
     @Override
     public void createRestaurant(Restaurant restaurant) {

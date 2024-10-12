@@ -11,4 +11,5 @@ public interface IRestaurantPersistencePort {
     Restaurant saveRestaurant(Restaurant restaurant);
     Optional<Restaurant> findRestaurantById(Long resturantId);
     PaginationCustom<Restaurant> findAllRestaurant(PaginationParams<RestaurantSortBy> paginationParams);
+    boolean existsRestaurantById(Long restaurantId);
 }

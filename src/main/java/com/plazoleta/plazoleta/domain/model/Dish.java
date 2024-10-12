@@ -20,6 +20,10 @@ public class Dish {
     private Long restaurantId;
     private boolean active = true;
 
+    public Dish(Long id) {
+        this.id = id;
+    }
+
     public Dish(String name, int price, String description, String imageUrl, String category, Long restaurantId) {
         this.name = name;
         this.price = price;

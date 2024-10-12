@@ -18,4 +18,7 @@ public interface IDishRepository extends JpaRepository<DishEntity, Long> {
     @Query("SELECT d FROM DishEntity d WHERE d.restaurant.id = :restaurantId AND d.category = :category")
     Page<DishEntity> findAllByRestaurantIdAndCategory(@Param("category") String category, @Param("restaurantId") Long restaurantId, Pageable pageable);
 
+    @Query("SELECT d FROM DishEntity d WHERE d.restaurant.id = :restaurantId AND d.id IN :dishIds")
+    List<DishEntity> findByRestaurantIdAndDishIds(@Param("restaurantId") Long restaurantId, @Param("dishIds") List<Long> dishIds);
+
 }

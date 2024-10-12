@@ -2,6 +2,9 @@ package com.plazoleta.plazoleta.domain.util;
 
 public class ExceptionConstants {
 
+
+
+
     public static final String INVALID_USER_ROLE_ERROR = "Invalid user role";
     public static final String INVALID_USER_ROLE_MESSAGE = "The user you want to add to create an restaurant does not is a owner";
 
@@ -30,6 +33,10 @@ public class ExceptionConstants {
 
     public static final String DISH_NOT_FOUND_ERROR = "The dish cannot be founded";
     public static final String DISH_NOT_FOUND_ERROR_MESSAGE = "That dish cannot be founded.";
+    public static final String DISH_NOT_FOUND_IN_RESTAURANT_MESSAGE = "Dish ID %d does not exist in restaurant ID %d";
+
+    public static final String ORDER_IN_PROGRESS_ERROR = "You have an order in process already check it";
+    public static final String ORDER_IN_PROGRESS_MESSAGE = "You have a order in process id %d and restaurant id %d";
 
 }
 

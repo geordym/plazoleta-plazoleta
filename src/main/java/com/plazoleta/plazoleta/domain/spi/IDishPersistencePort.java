@@ -6,6 +6,7 @@ import com.plazoleta.plazoleta.domain.model.pagination.PaginationCustom;
 import com.plazoleta.plazoleta.domain.model.pagination.PaginationParams;
 import com.plazoleta.plazoleta.domain.util.DishFilter;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface IDishPersistencePort {
@@ -15,4 +16,6 @@ public interface IDishPersistencePort {
     Dish updateDish(Dish dish);
 
     PaginationCustom<Dish> listDishByRestaurantId(DishFilter dishFilter, Long restaurantId, PaginationParams<DishEnumSortBy> paginationParams);
+
+    List<Dish> findAllDishByIdAndRestaurantId(List<Long> dishList, Long restaurantId);
 }
