@@ -1,10 +1,12 @@
 package com.plazoleta.plazoleta.util;
 
+import com.plazoleta.plazoleta.domain.enums.OrderSortBy;
 import com.plazoleta.plazoleta.domain.enums.OrderStatus;
 import com.plazoleta.plazoleta.domain.model.Dish;
 import com.plazoleta.plazoleta.domain.model.Order;
 import com.plazoleta.plazoleta.domain.model.OrderItem;
 import com.plazoleta.plazoleta.domain.model.Restaurant;
+import com.plazoleta.plazoleta.domain.model.pagination.PaginationParams;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -12,6 +14,9 @@ import java.util.List;
 
 public class DataProvider {
 
+    public static PaginationParams<OrderSortBy> orderPaginationParamsValid(){
+        return new PaginationParams<>(0, 2, OrderSortBy.STATUS, true);
+    }
 
     public static Order getValidOrder() {
         Order order = new Order();

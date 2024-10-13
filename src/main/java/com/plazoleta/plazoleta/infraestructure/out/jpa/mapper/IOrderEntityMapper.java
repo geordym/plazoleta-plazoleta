@@ -24,6 +24,10 @@ public interface IOrderEntityMapper {
     })
     Order toModel(OrderEntity order);
 
+
+    Order toModelWithOrderItems(OrderEntity order);
+
+
     @Mappings({
             @Mapping(target = "order", ignore = true),
             @Mapping(target = "dish", source = "dish")

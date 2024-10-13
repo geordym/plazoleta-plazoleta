@@ -1,5 +1,6 @@
 package com.plazoleta.plazoleta.application.mapper;
 
+import com.plazoleta.plazoleta.application.dto.response.RestaurantResponseDto;
 import com.plazoleta.plazoleta.application.dto.response.RestaurantShortResponseDto;
 import com.plazoleta.plazoleta.domain.model.Restaurant;
 import com.plazoleta.plazoleta.domain.model.pagination.PaginationCustom;
@@ -16,12 +17,12 @@ import java.util.stream.Collectors;
 public interface IRestaurantResponseMapper {
 
     @Mapping(source = "logoUrl", target = "urlLogo")
-    RestaurantShortResponseDto toDto(Restaurant restaurant);
+    RestaurantShortResponseDto toShortDto(Restaurant restaurant);
 
     default PaginationCustom<RestaurantShortResponseDto> toPaginationDto(PaginationCustom<Restaurant> restaurantPaginationCustom) {
         PaginationCustom<RestaurantShortResponseDto> pagination = new PaginationCustom<>();
         pagination.setContent(restaurantPaginationCustom.getContent().stream()
-                .map(this::toDto)
+                .map(this::toShortDto)
                 .collect(Collectors.toList()));
         pagination.setPageNumber(restaurantPaginationCustom.getPageNumber());
         pagination.setPageSize(restaurantPaginationCustom.getPageSize());
@@ -30,5 +31,8 @@ public interface IRestaurantResponseMapper {
         pagination.setLast(restaurantPaginationCustom.isLast());
         return pagination;
     }
+
+
+    RestaurantResponseDto toDto(Restaurant restaurant);
 
 }

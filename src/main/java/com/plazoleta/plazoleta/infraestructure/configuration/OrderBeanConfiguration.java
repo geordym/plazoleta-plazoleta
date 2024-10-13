@@ -4,11 +4,9 @@ package com.plazoleta.plazoleta.infraestructure.configuration;
 import com.plazoleta.plazoleta.application.handler.IOrderHandler;
 import com.plazoleta.plazoleta.application.handler.impl.OrderHandlerImpl;
 import com.plazoleta.plazoleta.application.mapper.IOrderRequestMapper;
+import com.plazoleta.plazoleta.application.mapper.IOrderResponseMapper;
 import com.plazoleta.plazoleta.domain.api.IOrderServicePort;
-import com.plazoleta.plazoleta.domain.spi.IDishPersistencePort;
-import com.plazoleta.plazoleta.domain.spi.IOrderPersistencePort;
-import com.plazoleta.plazoleta.domain.spi.IRestaurantPersistencePort;
-import com.plazoleta.plazoleta.domain.spi.IUserAuthenticationPort;
+import com.plazoleta.plazoleta.domain.spi.*;
 import com.plazoleta.plazoleta.domain.usecase.OrderUseCase;
 import com.plazoleta.plazoleta.domain.usecase.validator.OrderUseCaseValidator;
 import com.plazoleta.plazoleta.infraestructure.out.jpa.adapter.OrderJpaAdapter;
@@ -28,12 +26,14 @@ public class OrderBeanConfiguration {
     private final IRestaurantPersistencePort restaurantPersistencePort;
     private final IDishPersistencePort dishPersistencePort;
     private final IOrderRequestMapper orderRequestMapper;
+    private final IOrderResponseMapper orderResponseMapper;
 
     private final IUserAuthenticationPort userAuthenticationPort;
+    private final IUserConnectionPort userConnectionPort;
 
     @Bean
     public IOrderServicePort orderServicePort(){
-        return new OrderUseCase(orderUseCaseValidator(), orderPersistencePort(), userAuthenticationPort);
+        return new OrderUseCase(orderUseCaseValidator(), orderPersistencePort(), userAuthenticationPort, userConnectionPort);
     }
 
     @Bean
@@ -48,7 +48,7 @@ public class OrderBeanConfiguration {
 
     @Bean
     public IOrderHandler orderHandler(){
-        return new OrderHandlerImpl(orderServicePort(), orderRequestMapper);
+        return new OrderHandlerImpl(orderServicePort(), orderRequestMapper, orderResponseMapper);
     }
 
 

@@ -1,13 +1,22 @@
 package com.plazoleta.plazoleta.infraestructure.out.jpa.adapter;
 
+import com.plazoleta.plazoleta.domain.enums.OrderSortBy;
 import com.plazoleta.plazoleta.domain.enums.OrderStatus;
 import com.plazoleta.plazoleta.domain.model.Order;
+import com.plazoleta.plazoleta.domain.model.Restaurant;
+import com.plazoleta.plazoleta.domain.model.pagination.PaginationCustom;
+import com.plazoleta.plazoleta.domain.model.pagination.PaginationParams;
 import com.plazoleta.plazoleta.domain.spi.IOrderPersistencePort;
+import com.plazoleta.plazoleta.infraestructure.out.jpa.entity.DishEntity;
 import com.plazoleta.plazoleta.infraestructure.out.jpa.entity.OrderEntity;
 import com.plazoleta.plazoleta.infraestructure.out.jpa.entity.OrderItemEntity;
+import com.plazoleta.plazoleta.infraestructure.out.jpa.entity.RestaurantEntity;
 import com.plazoleta.plazoleta.infraestructure.out.jpa.mapper.IOrderEntityMapper;
 import com.plazoleta.plazoleta.infraestructure.out.jpa.repository.IOrderRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,11 +46,38 @@ public class OrderJpaAdapter implements IOrderPersistencePort {
         return activeOrders > 0;
     }
 
+    @Override
+    public PaginationCustom<Order> findOrdersByRestaurantId(OrderStatus statusFilter, Long restaurantId, PaginationParams<OrderSortBy> paginationParams) {
+        PageRequest pageRequest = PageRequest.of(
+                paginationParams.getPage(),
+                paginationParams.getSize(),
+                paginationParams.isAscending() ? Sort.by(paginationParams.getSortBy().entityAttribute()).ascending() : Sort.by(paginationParams.getSortBy().entityAttribute()).descending()
+        );
+
+        Page<OrderEntity> orderPage = (statusFilter == null )
+                ? orderRepository.findOrdersByRestaurantId(restaurantId, pageRequest)
+                : orderRepository.findOrdersByRestaurantIdAndStatus(restaurantId, statusFilter, pageRequest);
+
+        List<Order> orderList = orderPage.getContent()
+                .stream()
+                .map(orderEntityMapper::toModelWithOrderItems)
+                .toList();
+
+        return new PaginationCustom<>(
+                orderList,
+                orderPage.getNumber(),
+                orderPage.getSize(),
+                orderPage.getTotalElements(),
+                orderPage.getTotalPages(),
+                orderPage.isLast()
+        );
+    }
+
     private List<OrderItemEntity> mapOrderItems(Order order, OrderEntity orderEntity) {
         return order.getOrderItems().stream()
                 .map(orderItem -> {
                     OrderItemEntity orderItemEntity = orderEntityMapper.toEntity(orderItem);
-                    orderItemEntity.setOrder(orderEntity); // Asigna el Order a cada OrderItemEntity
+                    orderItemEntity.setOrder(orderEntity);
                     return orderItemEntity;
                 })
                 .toList();

@@ -2,8 +2,11 @@ package com.plazoleta.plazoleta.domain.usecase;
 
 
 import com.plazoleta.plazoleta.domain.api.IOrderServicePort;
+import com.plazoleta.plazoleta.domain.enums.OrderSortBy;
 import com.plazoleta.plazoleta.domain.enums.OrderStatus;
 import com.plazoleta.plazoleta.domain.model.Order;
+import com.plazoleta.plazoleta.domain.model.pagination.PaginationCustom;
+import com.plazoleta.plazoleta.domain.model.pagination.PaginationParams;
 import com.plazoleta.plazoleta.domain.spi.IOrderPersistencePort;
 import com.plazoleta.plazoleta.domain.spi.IUserAuthenticationPort;
 import com.plazoleta.plazoleta.domain.usecase.validator.OrderUseCaseValidator;
@@ -81,6 +84,12 @@ public class OrderUseCaseTest {
 
 
 
+    @Test
+    void testListOrdersPaginated(){
+        PaginationParams<OrderSortBy> paginationParams = DataProvider.orderPaginationParamsValid();
+        PaginationCustom<Order> paginationCustom = orderUseCase.listOrdersByEmployeeRestaurant(paginationParams);
+        assertNotNull(paginationCustom);
+    }
 
 
 }

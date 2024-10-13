@@ -12,4 +12,7 @@ public interface IRestaurantPersistencePort {
     Optional<Restaurant> findRestaurantById(Long resturantId);
     PaginationCustom<Restaurant> findAllRestaurant(PaginationParams<RestaurantSortBy> paginationParams);
     boolean existsRestaurantById(Long restaurantId);
+
+    Optional<Restaurant> findRestaurantByOwnerId(Long ownerId);
+
 }

@@ -1,6 +1,7 @@
 package com.plazoleta.plazoleta.domain.usecase;
 
 import com.plazoleta.plazoleta.domain.api.IRestaurantServicePort;
+import com.plazoleta.plazoleta.domain.enums.RestaurantSortBy;
 import com.plazoleta.plazoleta.domain.enums.RoleEnum;
 import com.plazoleta.plazoleta.domain.exception.*;
 import com.plazoleta.plazoleta.domain.model.Dish;
@@ -39,7 +40,17 @@ public class RestaurantUseCase implements IRestaurantServicePort {
     }
 
     @Override
-    public PaginationCustom<Restaurant> listRestaurants(PaginationParams paginationParams) {
+    public Restaurant findRestaurantByOwnerId(Long ownerId) {
+        return restaurantPersistencePort.findRestaurantByOwnerId(ownerId).orElseThrow(RestaurantNotFoundException::new);
+    }
+
+    @Override
+    public Restaurant findRestaurantById(Long restaurantId) {
+        return restaurantPersistencePort.findRestaurantById(restaurantId).orElseThrow(RestaurantNotFoundException::new);
+    }
+
+    @Override
+    public PaginationCustom<Restaurant> listRestaurants(PaginationParams<RestaurantSortBy> paginationParams) {
         return restaurantPersistencePort.findAllRestaurant(paginationParams);
     }
 

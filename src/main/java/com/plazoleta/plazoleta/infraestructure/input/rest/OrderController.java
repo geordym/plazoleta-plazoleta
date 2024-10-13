@@ -3,7 +3,10 @@ package com.plazoleta.plazoleta.infraestructure.input.rest;
 
 import com.plazoleta.plazoleta.application.dto.request.CreateDishRequestDto;
 import com.plazoleta.plazoleta.application.dto.request.CreateOrderRequestDto;
+import com.plazoleta.plazoleta.application.dto.response.OrderResponseDto;
+import com.plazoleta.plazoleta.application.dto.response.RestaurantShortResponseDto;
 import com.plazoleta.plazoleta.application.handler.IOrderHandler;
+import com.plazoleta.plazoleta.domain.model.pagination.PaginationCustom;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -12,10 +15,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/order")
@@ -23,6 +23,22 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController {
 
     private final IOrderHandler orderHandler;
+
+    @Operation(summary = "List orders")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved list", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Invalid request parameters", content = @Content),
+    })
+    @GetMapping("/employee")
+    public ResponseEntity<PaginationCustom<OrderResponseDto>> listRestaurants(@RequestParam(defaultValue = "") String status,
+                                                                              @RequestParam(defaultValue = "0") int page,
+                                                                              @RequestParam(defaultValue = "10") int size,
+                                                                              @RequestParam(defaultValue = "status") String sortBy,
+                                                                              @RequestParam(defaultValue = "true") boolean ascending){
+        PaginationCustom<OrderResponseDto> orderList = orderHandler.findOrdersByEmployeeRestaurant(status, page, size, sortBy, ascending);
+        return new ResponseEntity<>(orderList, HttpStatus.OK);
+    }
+
 
     @Operation(summary = "Create order")
     @ApiResponses(value = {

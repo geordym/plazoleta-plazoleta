@@ -14,4 +14,6 @@ public interface IRestaurantServicePort {
     void createRestaurant(Restaurant restaurant);
     PaginationCustom<Restaurant> listRestaurants(PaginationParams<RestaurantSortBy> paginationParams);
 
+    Restaurant findRestaurantByOwnerId(Long ownerId);
+    Restaurant findRestaurantById(Long restaurantId);
 }

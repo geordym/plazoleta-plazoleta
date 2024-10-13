@@ -1,6 +1,7 @@
 package com.plazoleta.plazoleta.infraestructure.out.feign.client;
 
 
+import com.plazoleta.plazoleta.domain.model.external.Employee;
 import com.plazoleta.plazoleta.domain.model.external.User;
 import com.plazoleta.plazoleta.infraestructure.out.feign.configuration.FeignClientConfig;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -14,5 +15,8 @@ public interface IUserConnectionFeignClient {
     @GetMapping(value = "/api/users/{userId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     User findClientById(@PathVariable Long userId);
 
+
+    @GetMapping(value = "/api/users/employee/{userId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    Employee findEmployeeByIdUserId(@PathVariable Long userId);
 
 }
