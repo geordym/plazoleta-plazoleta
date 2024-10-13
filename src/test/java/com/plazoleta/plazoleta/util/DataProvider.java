@@ -21,7 +21,6 @@ public class DataProvider {
         restaurant.setName("Valid Restaurant");
         order.setRestaurant(restaurant);
         order.setOrderDate(LocalDateTime.now());
-        order.setCustomerId(1L);
 
         List<OrderItem> orderItems = new ArrayList<>();
         OrderItem item1 = new OrderItem();

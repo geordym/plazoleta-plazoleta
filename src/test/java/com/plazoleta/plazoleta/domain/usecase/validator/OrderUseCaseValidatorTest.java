@@ -31,7 +31,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -46,6 +45,7 @@ public class OrderUseCaseValidatorTest {
     @Mock
     private IOrderPersistencePort orderPersistencePort;
 
+    private Long customerId = 10L;
 
 
     private OrderUseCaseValidator orderUseCaseValidator;
@@ -59,23 +59,19 @@ public class OrderUseCaseValidatorTest {
 
     @Test
     void testCreateOrderWhenHaveAlreadyOrder() {
-        Order order = DataProvider.getValidOrder();
-
-        when(orderPersistencePort.hasActiveOrders(order.getCustomerId())).thenReturn(true);
+        when(orderPersistencePort.hasActiveOrders(customerId)).thenReturn(true);
 
         assertThrows(OrderAlreadyInProgressException.class, () -> {
-            orderUseCaseValidator.validateIfHasAnOrderInProgress(order);
+            orderUseCaseValidator.validateIfHasAnOrderInProgress(customerId);
         });
     }
 
     @Test
     void testCreateOrderWhenNotHaveAlreadyOrder() {
-        Order order = DataProvider.getValidOrder();
-
-        when(orderPersistencePort.hasActiveOrders(order.getCustomerId())).thenReturn(false);
+        when(orderPersistencePort.hasActiveOrders(customerId)).thenReturn(false);
 
         assertDoesNotThrow( () -> {
-            orderUseCaseValidator.validateIfHasAnOrderInProgress(order);
+            orderUseCaseValidator.validateIfHasAnOrderInProgress(customerId);
         });
     }
 
@@ -85,12 +81,12 @@ public class OrderUseCaseValidatorTest {
         List<Dish> listDishesInOrder = order.getOrderItems().stream().map(OrderItem::getDish).toList();
 
         when(restaurantPersistencePort.existsRestaurantById(order.getRestaurant().getId())).thenReturn(true);
-        when(orderPersistencePort.hasActiveOrders(order.getCustomerId())).thenReturn(false);
-        when(orderPersistencePort.hasActiveOrders(order.getCustomerId())).thenReturn(false);
+        when(orderPersistencePort.hasActiveOrders(customerId)).thenReturn(false);
+        when(orderPersistencePort.hasActiveOrders(customerId)).thenReturn(false);
         when(dishPersistencePort.findAllDishByIdAndRestaurantId(anyList(), anyLong())).thenReturn(listDishesInOrder);
 
         assertDoesNotThrow(() -> {
-            orderUseCaseValidator.validateCreateOrder(order);
+            orderUseCaseValidator.validateCreateOrder(order, customerId);
         });
     }
 
@@ -99,7 +95,7 @@ public class OrderUseCaseValidatorTest {
         Order order = null;
 
         assertThrows(IllegalArgumentException.class, () -> {
-            orderUseCaseValidator.validateCreateOrder(order);
+            orderUseCaseValidator.validateCreateOrder(order, customerId);
         });
     }
 

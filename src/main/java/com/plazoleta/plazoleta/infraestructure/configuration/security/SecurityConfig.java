@@ -41,6 +41,9 @@ public class SecurityConfig {
                     registry.requestMatchers("/api/dish/status").hasRole(RoleEnum.OWNER.getName());
                     registry.requestMatchers(HttpMethod.GET,"/api/dish/restaurant/*").permitAll();
 
+                    registry.requestMatchers(HttpMethod.POST,"/api/order").hasRole(RoleEnum.CLIENTE.getName());
+
+
                     registry.requestMatchers(HttpMethod.POST,"/api/plazoleta/restaurant").hasRole(RoleEnum.ADMINISTRATOR.getName());
                     registry.requestMatchers(HttpMethod.GET,"/api/plazoleta/restaurant").permitAll();
                 })

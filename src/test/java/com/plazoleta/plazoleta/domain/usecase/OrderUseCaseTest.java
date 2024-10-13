@@ -5,6 +5,7 @@ import com.plazoleta.plazoleta.domain.api.IOrderServicePort;
 import com.plazoleta.plazoleta.domain.enums.OrderStatus;
 import com.plazoleta.plazoleta.domain.model.Order;
 import com.plazoleta.plazoleta.domain.spi.IOrderPersistencePort;
+import com.plazoleta.plazoleta.domain.spi.IUserAuthenticationPort;
 import com.plazoleta.plazoleta.domain.usecase.validator.OrderUseCaseValidator;
 import com.plazoleta.plazoleta.util.DataProvider;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,37 +30,47 @@ public class OrderUseCaseTest {
     @Mock
     private IOrderPersistencePort orderPersistencePort;
 
+    @Mock
+    private IUserAuthenticationPort userAuthenticationPort;
+
     @InjectMocks
     private OrderUseCase orderUseCase;
 
+    private Long customerId = 10L;
+
     @BeforeEach
     void setup(){
+        orderUseCase = new OrderUseCase(orderUseCaseValidator, orderPersistencePort, userAuthenticationPort);
     }
 
     @Test
     void testCreateOrderCallValidator(){
         Order order = new Order();
 
+        when(userAuthenticationPort.getAuthenticatedUserId()).thenReturn(customerId);
+
         orderUseCase.createOrder(order);
 
-        verify(orderUseCaseValidator).validateCreateOrder(order);
+        verify(orderUseCaseValidator).validateCreateOrder(order, customerId);
     }
 
     @Test
     void testCreateOrderIsPendingWhenSave(){
         Order order = DataProvider.getValidOrder();
 
-        orderUseCase.createOrder(order);
+        when(userAuthenticationPort.getAuthenticatedUserId()).thenReturn(customerId);
 
-        verify(orderUseCaseValidator).validateCreateOrder(order);
+        orderUseCase.createOrder(order);
+        verify(orderUseCaseValidator).validateCreateOrder(order, customerId);
     }
 
     @Test
     void testCreateOrderIsStatusPendingWhenSave() {
         Order order = DataProvider.getValidOrder();
 
-        orderUseCase.createOrder(order);
+        when(userAuthenticationPort.getAuthenticatedUserId()).thenReturn(customerId);
 
+        orderUseCase.createOrder(order);
         ArgumentCaptor<Order> orderCaptor = ArgumentCaptor.forClass(Order.class);
         verify(orderPersistencePort).saveOrder(orderCaptor.capture());
         Order capturedOrder = orderCaptor.getValue();

@@ -18,8 +18,7 @@ public class UserAuthenticationAdapter implements IUserAuthenticationPort {
     @Override
     public User getAuthenticatedUser() {
         CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = userConnectionPort.findUserById(Long.valueOf(customUserDetails.getUserId())).orElseThrow();
-        return user;
+        return userConnectionPort.findUserById(Long.valueOf(customUserDetails.getUserId())).orElseThrow();
     }
 
     @Override

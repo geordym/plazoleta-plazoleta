@@ -22,6 +22,7 @@ public class OrderUseCaseValidator {
     private final IOrderPersistencePort orderPersistencePort;
 
 
+
     public static final String ORDER_CANNOT_BE_NULL = "Order cannot be null";
     public static final String RESTAURANT_CANNOT_BE_NULL = "Restaurant cannot be null";
     public static final String ORDER_DATE_CANNOT_BE_NULL = "Order date cannot be null";
@@ -29,9 +30,9 @@ public class OrderUseCaseValidator {
     public static final String CUSTOMER_ID_CANNOT_BE_NULL = "Customer ID cannot be null";
     public static final String ORDER_ITEMS_CANNOT_BE_NULL_OR_EMPTY = "Order items cannot be null or empty";
 
-    public void validateCreateOrder(Order order){
+    public void validateCreateOrder(Order order, Long customerId){
         validateNotNull(order);
-        validateIfHasAnOrderInProgress(order);
+        validateIfHasAnOrderInProgress(customerId);
         validateHasRestaurantId(order);
         validateOrderItemsHasValidQuantity(order);
         validateOrdersHaveDish(order);
@@ -39,8 +40,8 @@ public class OrderUseCaseValidator {
         validateDishesExistInRestaurant(order);
     }
 
-    public void validateIfHasAnOrderInProgress(Order order){
-        boolean haveOrderInProgress = orderPersistencePort.hasActiveOrders(order.getCustomerId());
+    public void validateIfHasAnOrderInProgress(Long customerId){
+        boolean haveOrderInProgress = orderPersistencePort.hasActiveOrders(customerId);
         if(haveOrderInProgress){
             throw new OrderAlreadyInProgressException();
         }
@@ -58,10 +59,6 @@ public class OrderUseCaseValidator {
 
         if (order.getOrderDate() == null) {
             throw new IllegalArgumentException(ORDER_DATE_CANNOT_BE_NULL);
-        }
-
-        if (order.getCustomerId() == null) {
-            throw new IllegalArgumentException(CUSTOMER_ID_CANNOT_BE_NULL);
         }
 
         if (order.getOrderItems() == null || order.getOrderItems().isEmpty()) {
@@ -111,8 +108,8 @@ public class OrderUseCaseValidator {
 
     public void validateDishesExistInRestaurant(Order order){
         Long restaurantId = order.getRestaurant().getId();
-        List<Long> dishesIdList = order.getOrderItems().stream().map(OrderItem::getOrderItemId).toList();
-        List<Dish> dishFounded=  dishPersistencePort.findAllDishByIdAndRestaurantId(dishesIdList, restaurantId);
+        List<Long> dishesIdList = order.getOrderItems().stream().map(orderItem -> orderItem.getDish().getId()).toList();
+        List<Dish> dishFounded = dishPersistencePort.findAllDishByIdAndRestaurantId(dishesIdList, restaurantId);
         for (Long dishId : dishesIdList) {
             if (dishFounded.stream().noneMatch(dish -> dish.getId().equals(dishId))) {
                 throw new InvalidDishForRestaurantException(dishId, restaurantId);
