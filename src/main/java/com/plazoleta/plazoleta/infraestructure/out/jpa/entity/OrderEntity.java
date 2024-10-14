@@ -41,4 +41,8 @@ public class OrderEntity {
     @Column(name = "employee_assigned_id")
     private Long employeeAssignedId;
 
+
+    @Column(name = "reclaim_code")
+    private Integer reclaimCode;
+
 }

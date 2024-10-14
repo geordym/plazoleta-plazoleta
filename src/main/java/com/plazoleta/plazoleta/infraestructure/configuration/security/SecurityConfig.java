@@ -44,6 +44,7 @@ public class SecurityConfig {
                     registry.requestMatchers(HttpMethod.GET,"/api/order/employee").hasRole(RoleEnum.EMPLOYEE.getName());
                     registry.requestMatchers(HttpMethod.POST,"/api/order").hasRole(RoleEnum.CLIENTE.getName());
                     registry.requestMatchers(HttpMethod.POST,"/api/order/assign/*").hasRole(RoleEnum.EMPLOYEE.getName());
+                    registry.requestMatchers(HttpMethod.POST,"/api/order/notify-ready/*").hasRole(RoleEnum.EMPLOYEE.getName());
 
                     registry.requestMatchers(HttpMethod.GET,"/api/restaurant/owner/*").permitAll();
                     registry.requestMatchers(HttpMethod.GET,"/api/restaurant/*").permitAll();

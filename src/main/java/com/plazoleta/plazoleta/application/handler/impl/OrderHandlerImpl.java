@@ -13,6 +13,7 @@ import com.plazoleta.plazoleta.domain.model.Order;
 import com.plazoleta.plazoleta.domain.model.Restaurant;
 import com.plazoleta.plazoleta.domain.model.pagination.PaginationCustom;
 import com.plazoleta.plazoleta.domain.model.pagination.PaginationParams;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -42,6 +43,12 @@ public class OrderHandlerImpl implements IOrderHandler {
     @Override
     public void assignOrderToEmployee(Long orderId) {
         orderServicePort.assignEmployeeToOrder(orderId);
+    }
+
+    @Transactional
+    @Override
+    public void notifyOrderIsReady(Long orderId) {
+        orderServicePort.notifyClientOrderIsReady(orderId);
     }
 
 

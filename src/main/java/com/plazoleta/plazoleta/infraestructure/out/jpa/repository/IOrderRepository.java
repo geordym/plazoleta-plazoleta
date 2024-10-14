@@ -29,4 +29,17 @@ public interface IOrderRepository extends JpaRepository<OrderEntity, Long> {
     @Query("UPDATE OrderEntity o SET o.employeeAssignedId = :employeeId, o.status = :status WHERE o.id = :orderId")
     void updateOrderEmployeeAssigned(@Param("employeeId") Long employeeId, @Param("orderId") Long orderId, @Param("status") OrderStatus status);
 
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE OrderEntity o SET o.reclaimCode = :reclaimCode WHERE o.id = :orderId")
+    void updateOrderReclaimCode(@Param("orderId") Long orderId, @Param("reclaimCode") Integer reclaimCode);
+
+
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE OrderEntity o SET o.status = :status WHERE o.id = :orderId")
+    void updateOrderStatus(@Param("status") OrderStatus status, @Param("orderId") Long orderId);
+
 }

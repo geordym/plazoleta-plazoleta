@@ -23,5 +23,17 @@ public class Order {
     private Long customerId;
     private List<OrderItem> orderItems;
 
+    private Integer reclaimCode;
+
     private Long employeeAssignedId;
+
+    public Order(Long id, Restaurant restaurant, LocalDateTime orderDate, OrderStatus status, Long customerId, List<OrderItem> orderItems, Long employeeAssignedId) {
+        this.id = id;
+        this.restaurant = restaurant;
+        this.orderDate = orderDate;
+        this.status = status;
+        this.customerId = customerId;
+        this.orderItems = orderItems;
+        this.employeeAssignedId = employeeAssignedId;
+    }
 }

@@ -84,6 +84,16 @@ public class OrderJpaAdapter implements IOrderPersistencePort {
        orderRepository.updateOrderEmployeeAssigned(employeeId, orderId, OrderStatus.PREPARING);
     }
 
+    @Override
+    public void updateOrderReclaimCode(Long orderId, Integer reclaimCode) {
+        orderRepository.updateOrderReclaimCode(orderId, reclaimCode);
+    }
+
+    @Override
+    public void updateOrderStatus(Long orderId, OrderStatus orderStatus) {
+        orderRepository.updateOrderStatus(orderStatus, orderId);
+    }
+
     private List<OrderItemEntity> mapOrderItems(Order order, OrderEntity orderEntity) {
         return order.getOrderItems().stream()
                 .map(orderItem -> {

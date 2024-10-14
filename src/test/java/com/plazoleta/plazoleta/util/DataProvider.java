@@ -7,6 +7,7 @@ import com.plazoleta.plazoleta.domain.model.Order;
 import com.plazoleta.plazoleta.domain.model.OrderItem;
 import com.plazoleta.plazoleta.domain.model.Restaurant;
 import com.plazoleta.plazoleta.domain.model.external.Employee;
+import com.plazoleta.plazoleta.domain.model.external.User;
 import com.plazoleta.plazoleta.domain.model.pagination.PaginationCustom;
 import com.plazoleta.plazoleta.domain.model.pagination.PaginationParams;
 
@@ -15,6 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DataProvider {
+
+    public static User getValidUser(){
+        return new User();
+    }
 
     public static Order orderWithPendingStatus(){
         return new Order(1L, new Restaurant(), LocalDateTime.now(), OrderStatus.PENDING, 1L, new ArrayList<>(), 1L);

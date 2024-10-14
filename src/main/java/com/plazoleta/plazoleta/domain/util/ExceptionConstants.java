@@ -42,8 +42,11 @@ public class ExceptionConstants {
     public static final String ORDER_NOT_FOUND_ERROR = "We cannot find the order";
     public static final String ORDER_NOT_FOUND_MESSAGE = "The order do you wanna to assign, does not exist";
 
-
     public static final String ORDER_NOT_PENDING_ERROR = "Order is not in status pending";
     public static final String ORDER_NOT_PENDING_MESSAGE = "The order do you wanna to assign not have the status pending";
+
+    public static final String ORDER_NOT_PREPARING_ERROR = "Order is not in status preparing";
+    public static final String ORDER_NOT_PREPARING_MESSAGE = "The order do you wanna to notify as ready is not in preparing status";
+
 }
 

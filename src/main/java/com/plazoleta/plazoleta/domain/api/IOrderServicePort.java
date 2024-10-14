@@ -13,4 +13,8 @@ public interface IOrderServicePort {
 
     void assignEmployeeToOrder(Long orderId);
 
+    void notifyClientOrderIsReady(Long orderId);
+
+    void deliverOrder();
+
 }

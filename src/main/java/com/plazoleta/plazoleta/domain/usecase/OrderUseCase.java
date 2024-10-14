@@ -5,19 +5,25 @@ import com.plazoleta.plazoleta.domain.enums.OrderSortBy;
 import com.plazoleta.plazoleta.domain.enums.OrderStatus;
 import com.plazoleta.plazoleta.domain.exception.OrderNotFoundException;
 import com.plazoleta.plazoleta.domain.exception.OrderNotPendingException;
+import com.plazoleta.plazoleta.domain.exception.OrderNotPreparingException;
 import com.plazoleta.plazoleta.domain.exception.UnauthorizedAccessException;
 import com.plazoleta.plazoleta.domain.model.Order;
 import com.plazoleta.plazoleta.domain.model.external.Employee;
 import com.plazoleta.plazoleta.domain.model.external.User;
 import com.plazoleta.plazoleta.domain.model.pagination.PaginationCustom;
 import com.plazoleta.plazoleta.domain.model.pagination.PaginationParams;
+import com.plazoleta.plazoleta.domain.spi.IMessagerConnectionPort;
 import com.plazoleta.plazoleta.domain.spi.IOrderPersistencePort;
 import com.plazoleta.plazoleta.domain.spi.IUserAuthenticationPort;
 import com.plazoleta.plazoleta.domain.spi.IUserConnectionPort;
 import com.plazoleta.plazoleta.domain.usecase.validator.OrderUseCaseValidator;
+import com.plazoleta.plazoleta.domain.util.Messages;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Objects;
+import java.util.Random;
+
+import static com.plazoleta.plazoleta.domain.util.Constants.RECLAIM_CODE_LENGTH;
 
 @RequiredArgsConstructor
 public class OrderUseCase implements IOrderServicePort {
@@ -25,6 +31,8 @@ public class OrderUseCase implements IOrderServicePort {
     private final IOrderPersistencePort orderPersistencePort;
     private final IUserAuthenticationPort userAuthenticationPort;
     private final IUserConnectionPort userConnectionPort;
+    private final IMessagerConnectionPort messagerConnectionPort;
+
 
     @Override
     public void createOrder(Order order) {
@@ -50,6 +58,30 @@ public class OrderUseCase implements IOrderServicePort {
         validateIfEmployeeCanWorksInThatOrder(order, employee);
 
         orderPersistencePort.updateOrderEmployeeAssigned(order.getId(), employee.getId());
+    }
+
+    @Override
+    public void notifyClientOrderIsReady(Long orderId) {
+        Order order = orderPersistencePort.findOrderById(orderId).orElseThrow(OrderNotFoundException::new);
+        if(order.getStatus() != OrderStatus.PREPARING){
+            throw new OrderNotPreparingException();
+        }
+
+        User user = userAuthenticationPort.getAuthenticatedUser();
+
+        Integer reclaimCode = generateReclaimCode();
+        orderPersistencePort.updateOrderStatus(order.getId(), OrderStatus.READY);
+        orderPersistencePort.updateOrderReclaimCode(order.getId(), reclaimCode);
+
+        String message = Messages.messageOrderReady(order, user, reclaimCode);
+        messagerConnectionPort.sendNotifySMSOrderReady(user.getPhoneNumber(), message);
+    }
+
+    public Integer generateReclaimCode() {
+        Random random = new Random();
+        int min = (int) Math.pow(10, RECLAIM_CODE_LENGTH - 1);
+        int max = (int) Math.pow(10, RECLAIM_CODE_LENGTH) - 1;
+        return min + random.nextInt(max - min + 1);
     }
 
     private static void validateOrderStatusIsPending(Order order) {

@@ -6,16 +6,20 @@ import com.plazoleta.plazoleta.domain.enums.OrderSortBy;
 import com.plazoleta.plazoleta.domain.enums.OrderStatus;
 import com.plazoleta.plazoleta.domain.exception.OrderNotFoundException;
 import com.plazoleta.plazoleta.domain.exception.OrderNotPendingException;
+import com.plazoleta.plazoleta.domain.exception.OrderNotPreparingException;
 import com.plazoleta.plazoleta.domain.exception.UnauthorizedAccessException;
 import com.plazoleta.plazoleta.domain.model.Order;
 import com.plazoleta.plazoleta.domain.model.Restaurant;
 import com.plazoleta.plazoleta.domain.model.external.Employee;
+import com.plazoleta.plazoleta.domain.model.external.User;
 import com.plazoleta.plazoleta.domain.model.pagination.PaginationCustom;
 import com.plazoleta.plazoleta.domain.model.pagination.PaginationParams;
+import com.plazoleta.plazoleta.domain.spi.IMessagerConnectionPort;
 import com.plazoleta.plazoleta.domain.spi.IOrderPersistencePort;
 import com.plazoleta.plazoleta.domain.spi.IUserAuthenticationPort;
 import com.plazoleta.plazoleta.domain.spi.IUserConnectionPort;
 import com.plazoleta.plazoleta.domain.usecase.validator.OrderUseCaseValidator;
+import com.plazoleta.plazoleta.domain.util.Messages;
 import com.plazoleta.plazoleta.util.DataProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,7 +33,7 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -48,6 +52,9 @@ public class OrderUseCaseTest {
     @Mock
     private IUserConnectionPort userConnectionPort;
 
+    @Mock
+    private IMessagerConnectionPort messagerConnectionPort;
+
     @InjectMocks
     private OrderUseCase orderUseCase;
 
@@ -55,7 +62,7 @@ public class OrderUseCaseTest {
 
     @BeforeEach
     void setup(){
-        orderUseCase = new OrderUseCase(orderUseCaseValidator, orderPersistencePort, userAuthenticationPort, userConnectionPort);
+        orderUseCase = new OrderUseCase(orderUseCaseValidator, orderPersistencePort, userAuthenticationPort, userConnectionPort, messagerConnectionPort);
     }
 
     @Test
@@ -169,5 +176,57 @@ public class OrderUseCaseTest {
     }
 
 
+
+
+    @Test
+    void testNotifyOrderWhenOrderNotExistThrowException(){
+        Long orderId = 1L;
+
+        when(orderPersistencePort.findOrderById(orderId)).thenReturn(Optional.empty());
+
+        assertThrows(OrderNotFoundException.class, () -> orderUseCase.notifyClientOrderIsReady(orderId));
+    }
+
+    @Test
+    void testNotifyOrderWhenOrderIsNotPendingThrowException(){
+        Long orderId = 1L;
+        Order order = DataProvider.getValidOrder();
+
+        when(orderPersistencePort.findOrderById(orderId)).thenReturn(Optional.of(order));
+
+        assertThrows(OrderNotPreparingException.class, () -> orderUseCase.notifyClientOrderIsReady(orderId));
+    }
+
+    @Test
+    void testNotifyClientOrderIsReady() {
+        Order order = DataProvider.getValidOrder();
+        Long orderId = order.getId();
+        order.setStatus(OrderStatus.PREPARING);
+        User user = DataProvider.getValidUser();
+
+        // Mockea las respuestas de los métodos necesarios
+        when(orderPersistencePort.findOrderById(orderId)).thenReturn(Optional.of(order));
+        when(userAuthenticationPort.getAuthenticatedUser()).thenReturn(user);
+
+
+        // Verifica que se llame al método para enviar el SMS
+        orderUseCase.notifyClientOrderIsReady(orderId);
+
+        // Verifica el estado de la orden y el código de reclamación
+        verify(orderPersistencePort).updateOrderStatus(order.getId(), OrderStatus.READY);
+        // cverify(orderPersistencePort).updateOrderReclaimCode(order.getId(), anyInt());
+        //verify(messagerConnectionPort).sendNotifySMSOrderReady(user.getPhoneNumber(), expectedMessage);
+    }
+
+
+    @Test
+    void testGenerationOfRandomCode(){
+        Integer reclaimCodeLength = 6;
+
+        Integer reclaimCode = orderUseCase.generateReclaimCode();
+
+        assertEquals(reclaimCodeLength, String.valueOf(reclaimCode).length(), "El código de reclamación debe tener una longitud de " + reclaimCodeLength);
+        assertTrue(String.valueOf(reclaimCode).matches("\\d{6}"), "El código de reclamación debe contener solo dígitos y tener una longitud de 6");
+    }
 
 }

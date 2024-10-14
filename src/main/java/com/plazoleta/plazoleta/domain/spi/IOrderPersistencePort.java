@@ -17,4 +17,8 @@ public interface IOrderPersistencePort {
     Optional<Order> findOrderById(Long orderId);
 
     void updateOrderEmployeeAssigned(Long orderId, Long employeeId);
+
+    void updateOrderReclaimCode(Long orderId, Integer reclaimCode);
+
+    void updateOrderStatus(Long orderId, OrderStatus orderStatus);
 }

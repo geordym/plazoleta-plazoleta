@@ -11,6 +11,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class DomainExceptionHandler {
 
+    @ExceptionHandler(OrderNotPreparingException.class)
+    public ResponseEntity<ErrorGenericResponseDto> handleOrderNotPreparingException(OrderNotPreparingException ex){
+        ErrorGenericResponseDto errorGenericResponseDto = new ErrorGenericResponseDto(ex.getError(), ex.getMessage(), ex.getTimestamps());
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(errorGenericResponseDto);
+    }
+
     @ExceptionHandler(OrderNotPendingException.class)
     public ResponseEntity<ErrorGenericResponseDto> handleOrderNotPendingException(OrderNotPendingException ex){
         ErrorGenericResponseDto errorGenericResponseDto = new ErrorGenericResponseDto(ex.getError(), ex.getMessage(), ex.getTimestamps());

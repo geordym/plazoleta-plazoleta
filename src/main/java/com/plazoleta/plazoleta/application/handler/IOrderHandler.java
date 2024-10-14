@@ -15,4 +15,6 @@ public interface IOrderHandler {
 
     void assignOrderToEmployee(Long orderId);
 
+    void notifyOrderIsReady(Long orderId);
+
 }

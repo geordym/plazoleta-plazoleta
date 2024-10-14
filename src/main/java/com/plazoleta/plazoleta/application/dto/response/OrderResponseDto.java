@@ -23,4 +23,6 @@ public class OrderResponseDto {
     private OrderStatus status;
     private Long customerId;
     private List<OrderItemResponseDto> orderItems;
+
+    private Integer reclaimCode;
 }

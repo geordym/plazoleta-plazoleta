@@ -24,6 +24,18 @@ public class OrderController {
 
     private final IOrderHandler orderHandler;
 
+    @Operation(summary = "Notify order is ready")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Order ready status changed succesfully", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Error in the body of the request", content = @Content),
+    })
+    @PostMapping("/notify-ready/{orderId}")
+    private ResponseEntity<Void> notifyOrderIsReady(@PathVariable Long orderId){
+        orderHandler.notifyOrderIsReady(orderId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
     @Operation(summary = "List orders")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved list", content = @Content),
