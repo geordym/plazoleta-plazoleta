@@ -16,6 +16,14 @@ import java.util.List;
 
 public class DataProvider {
 
+    public static Order orderWithPendingStatus(){
+        return new Order(1L, new Restaurant(), LocalDateTime.now(), OrderStatus.PENDING, 1L, new ArrayList<>(), 1L);
+    }
+
+    public static Order orderWithPreparingStatus(){
+        return new Order(1L, new Restaurant(), LocalDateTime.now(), OrderStatus.PREPARING, 1L, new ArrayList<>(), 1L);
+    }
+
     public static Employee validEmployee(){
         return new Employee(1L, 1L, 1L);
     }

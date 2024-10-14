@@ -40,6 +40,20 @@ public class OrderController {
     }
 
 
+    @Operation(summary = "Assign order to employee")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Order assigned to employee succesfully", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Error in the body of the request", content = @Content),
+            @ApiResponse(responseCode = "404", description = "The order cannot be founded", content = @Content),
+            @ApiResponse(responseCode = "409", description = "The order dont is in PENDING status", content = @Content),
+    })
+    @PostMapping("/assign/{orderId}")
+    private ResponseEntity<Void> assignOrderToEmployee(@PathVariable Long orderId){
+        orderHandler.assignOrderToEmployee(orderId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
     @Operation(summary = "Create order")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Order created succesfully", content = @Content),

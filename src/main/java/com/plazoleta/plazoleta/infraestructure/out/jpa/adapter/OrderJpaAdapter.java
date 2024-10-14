@@ -20,6 +20,7 @@ import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class OrderJpaAdapter implements IOrderPersistencePort {
@@ -71,6 +72,16 @@ public class OrderJpaAdapter implements IOrderPersistencePort {
                 orderPage.getTotalPages(),
                 orderPage.isLast()
         );
+    }
+
+    @Override
+    public Optional<Order> findOrderById(Long orderId) {
+        return orderRepository.findById(orderId).map(orderEntityMapper::toModel);
+    }
+
+    @Override
+    public void updateOrderEmployeeAssigned(Long orderId, Long employeeId) {
+       orderRepository.updateOrderEmployeeAssigned(employeeId, orderId, OrderStatus.PREPARING);
     }
 
     private List<OrderItemEntity> mapOrderItems(Order order, OrderEntity orderEntity) {

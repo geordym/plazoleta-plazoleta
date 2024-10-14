@@ -4,8 +4,8 @@ import com.plazoleta.plazoleta.domain.util.ExceptionConstants;
 
 import java.time.LocalDateTime;
 
-public class OrderAlreadyInProgressException extends ErrorException {
-    public OrderAlreadyInProgressException() {
+public class CustomerHasActiveOrderException extends ErrorException {
+    public CustomerHasActiveOrderException() {
         super(ExceptionConstants.ORDER_IN_PROGRESS_ERROR, ExceptionConstants.ORDER_IN_PROGRESS_MESSAGE, LocalDateTime.now().toString());
     }
 

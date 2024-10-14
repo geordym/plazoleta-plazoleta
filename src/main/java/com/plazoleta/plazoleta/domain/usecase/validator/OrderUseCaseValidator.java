@@ -1,8 +1,7 @@
 package com.plazoleta.plazoleta.domain.usecase.validator;
 
-import com.plazoleta.plazoleta.domain.exception.DishNotFoundException;
 import com.plazoleta.plazoleta.domain.exception.InvalidDishForRestaurantException;
-import com.plazoleta.plazoleta.domain.exception.OrderAlreadyInProgressException;
+import com.plazoleta.plazoleta.domain.exception.CustomerHasActiveOrderException;
 import com.plazoleta.plazoleta.domain.exception.RestaurantNotFoundException;
 import com.plazoleta.plazoleta.domain.model.Dish;
 import com.plazoleta.plazoleta.domain.model.Order;
@@ -43,7 +42,7 @@ public class OrderUseCaseValidator {
     public void validateIfHasAnOrderInProgress(Long customerId){
         boolean haveOrderInProgress = orderPersistencePort.hasActiveOrders(customerId);
         if(haveOrderInProgress){
-            throw new OrderAlreadyInProgressException();
+            throw new CustomerHasActiveOrderException();
         }
     }
 

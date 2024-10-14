@@ -13,4 +13,6 @@ public interface IOrderHandler {
     PaginationCustom<OrderResponseDto> findOrdersByEmployeeRestaurant(String status, int page, int size, String sortBy, boolean ascending);
 
 
+    void assignOrderToEmployee(Long orderId);
+
 }

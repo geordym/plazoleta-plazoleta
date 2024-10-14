@@ -3,7 +3,7 @@ package com.plazoleta.plazoleta.domain.usecase.validator;
 
 import com.plazoleta.plazoleta.domain.enums.OrderStatus;
 import com.plazoleta.plazoleta.domain.exception.InvalidDishForRestaurantException;
-import com.plazoleta.plazoleta.domain.exception.OrderAlreadyInProgressException;
+import com.plazoleta.plazoleta.domain.exception.CustomerHasActiveOrderException;
 import com.plazoleta.plazoleta.domain.exception.RestaurantNotFoundException;
 import com.plazoleta.plazoleta.domain.model.Dish;
 import com.plazoleta.plazoleta.domain.model.Order;
@@ -12,17 +12,12 @@ import com.plazoleta.plazoleta.domain.model.Restaurant;
 import com.plazoleta.plazoleta.domain.spi.IDishPersistencePort;
 import com.plazoleta.plazoleta.domain.spi.IOrderPersistencePort;
 import com.plazoleta.plazoleta.domain.spi.IRestaurantPersistencePort;
-import com.plazoleta.plazoleta.infraestructure.out.jpa.entity.DishEntity;
-import com.plazoleta.plazoleta.infraestructure.out.jpa.mapper.IDishEntityMapper;
 import com.plazoleta.plazoleta.util.DataProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -61,7 +56,7 @@ public class OrderUseCaseValidatorTest {
     void testCreateOrderWhenHaveAlreadyOrder() {
         when(orderPersistencePort.hasActiveOrders(customerId)).thenReturn(true);
 
-        assertThrows(OrderAlreadyInProgressException.class, () -> {
+        assertThrows(CustomerHasActiveOrderException.class, () -> {
             orderUseCaseValidator.validateIfHasAnOrderInProgress(customerId);
         });
     }

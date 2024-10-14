@@ -11,5 +11,6 @@ public interface IOrderServicePort {
 
     PaginationCustom<Order> listOrdersByEmployeeRestaurant(OrderStatus orderStatus, PaginationParams<OrderSortBy> paginationParams);
 
+    void assignEmployeeToOrder(Long orderId);
 
 }

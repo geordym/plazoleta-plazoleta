@@ -1,6 +1,7 @@
 package com.plazoleta.plazoleta.infraestructure.out.jpa.entity;
 
 import com.plazoleta.plazoleta.domain.enums.OrderStatus;
+import com.plazoleta.plazoleta.domain.model.external.Employee;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,5 +37,8 @@ public class OrderEntity {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<OrderItemEntity> orderItems;
+
+    @Column(name = "employee_assigned_id")
+    private Long employeeAssignedId;
 
 }

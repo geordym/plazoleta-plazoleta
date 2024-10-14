@@ -38,5 +38,12 @@ public class ExceptionConstants {
     public static final String ORDER_IN_PROGRESS_ERROR = "You have an order in process already check it";
     public static final String ORDER_IN_PROGRESS_MESSAGE = "You have a order in process id %d and restaurant id %d";
 
+
+    public static final String ORDER_NOT_FOUND_ERROR = "We cannot find the order";
+    public static final String ORDER_NOT_FOUND_MESSAGE = "The order do you wanna to assign, does not exist";
+
+
+    public static final String ORDER_NOT_PENDING_ERROR = "Order is not in status pending";
+    public static final String ORDER_NOT_PENDING_MESSAGE = "The order do you wanna to assign not have the status pending";
 }
 

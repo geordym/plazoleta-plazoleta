@@ -39,5 +39,10 @@ public class OrderHandlerImpl implements IOrderHandler {
         return orderResponseMapper.toPaginationDto(orderList);
     }
 
+    @Override
+    public void assignOrderToEmployee(Long orderId) {
+        orderServicePort.assignEmployeeToOrder(orderId);
+    }
+
 
 }

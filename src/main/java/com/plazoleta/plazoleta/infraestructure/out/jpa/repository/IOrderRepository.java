@@ -2,9 +2,11 @@ package com.plazoleta.plazoleta.infraestructure.out.jpa.repository;
 
 import com.plazoleta.plazoleta.domain.enums.OrderStatus;
 import com.plazoleta.plazoleta.infraestructure.out.jpa.entity.OrderEntity;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -20,5 +22,11 @@ public interface IOrderRepository extends JpaRepository<OrderEntity, Long> {
 
     @Query("SELECT o FROM OrderEntity o WHERE o.restaurant.id = :restaurantId AND o.status = :status")
     Page<OrderEntity> findOrdersByRestaurantIdAndStatus(@Param("restaurantId") Long restaurantId, @Param("status") OrderStatus status, Pageable pageable);
+
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE OrderEntity o SET o.employeeAssignedId = :employeeId, o.status = :status WHERE o.id = :orderId")
+    void updateOrderEmployeeAssigned(@Param("employeeId") Long employeeId, @Param("orderId") Long orderId, @Param("status") OrderStatus status);
 
 }

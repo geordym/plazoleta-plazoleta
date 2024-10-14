@@ -2,6 +2,7 @@ package com.plazoleta.plazoleta.domain.model;
 
 
 import com.plazoleta.plazoleta.domain.enums.OrderStatus;
+import com.plazoleta.plazoleta.domain.model.external.Employee;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,4 +22,6 @@ public class Order {
     private OrderStatus status;
     private Long customerId;
     private List<OrderItem> orderItems;
+
+    private Long employeeAssignedId;
 }
