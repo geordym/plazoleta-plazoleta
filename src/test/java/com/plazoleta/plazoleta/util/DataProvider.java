@@ -6,6 +6,8 @@ import com.plazoleta.plazoleta.domain.model.Dish;
 import com.plazoleta.plazoleta.domain.model.Order;
 import com.plazoleta.plazoleta.domain.model.OrderItem;
 import com.plazoleta.plazoleta.domain.model.Restaurant;
+import com.plazoleta.plazoleta.domain.model.external.Employee;
+import com.plazoleta.plazoleta.domain.model.pagination.PaginationCustom;
 import com.plazoleta.plazoleta.domain.model.pagination.PaginationParams;
 
 import java.time.LocalDateTime;
@@ -14,9 +16,62 @@ import java.util.List;
 
 public class DataProvider {
 
+    public static Employee validEmployee(){
+        return new Employee(1L, 1L, 1L);
+    }
+
     public static PaginationParams<OrderSortBy> orderPaginationParamsValid(){
         return new PaginationParams<>(0, 2, OrderSortBy.STATUS, true);
     }
+
+    public static PaginationCustom<Order> orderPaginationCustom(int page, int size, boolean isAscending) {
+        // Crear una lista de órdenes
+        List<Order> orders = new ArrayList<>();
+
+        // Generar datos de ejemplo
+        for (int i = 1; i <= size; i++) {
+            // Crear un restaurante de ejemplo
+            Restaurant restaurant = new Restaurant();
+            restaurant.setId((long) i);
+            restaurant.setName("Restaurant " + i);
+            restaurant.setNit(123456789L + i);
+            restaurant.setAddress("Address " + i);
+            restaurant.setPhone("123-456-789" + i);
+            restaurant.setLogoUrl("http://example.com/logo" + i + ".png");
+            restaurant.setOwnerId(100L + i);
+
+            // Crear elementos de la orden
+            List<OrderItem> orderItems = new ArrayList<>();
+            for (int j = 1; j <= 3; j++) {
+                OrderItem orderItem = new OrderItem();
+                orderItem.setOrderItemId((long) (i * 10 + j));
+                orderItem.setDish(new Dish((long) j));
+                orderItem.setQuantity(j);
+                orderItems.add(orderItem);
+            }
+
+            // Crear la orden
+            Order order = new Order();
+            order.setId((long) i);
+            order.setRestaurant(restaurant);
+            order.setOrderDate(LocalDateTime.now());
+            order.setStatus(OrderStatus.PENDING);
+            order.setCustomerId(200L + i);
+            order.setOrderItems(orderItems);
+
+            orders.add(order);
+        }
+
+        PaginationCustom<Order> paginationCustom = new PaginationCustom<>();
+        paginationCustom.setContent(orders);
+        paginationCustom.setPageSize(size);
+        paginationCustom.setTotalElements(orders.size());
+        paginationCustom.setTotalPages((int) Math.ceil((double) orders.size() / size));
+        paginationCustom.setLast(page >= paginationCustom.getTotalPages() - 1);
+
+        return paginationCustom;
+    }
+
 
     public static Order getValidOrder() {
         Order order = new Order();
