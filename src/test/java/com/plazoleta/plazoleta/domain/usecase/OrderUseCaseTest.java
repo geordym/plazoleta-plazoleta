@@ -316,6 +316,25 @@ public class OrderUseCaseTest {
     }
 
 
+    @Test
+    void testCancelOrderNotExistWhenCancelOrder(){
+        Long orderId = 1L;
+
+        when(orderPersistencePort.findOrderById(orderId)).thenReturn(Optional.empty());
+
+        assertThrows(OrderNotFoundException.class, () -> orderUseCase.cancelOrder(orderId));
+    }
+
+    @Test
+    void testCancelOrderWhenStatusIsNotPending_ThrowsException(){
+        Order order = DataProvider.getValidOrder();
+        order.setStatus(OrderStatus.PREPARING);
+
+        when(orderPersistencePort.findOrderById(order.getId())).thenReturn(Optional.of(order));
+
+        assertThrows(OrderNotCancelableException.class, () -> orderUseCase.cancelOrder(order.getId()));
+    }
+
 
 
 }

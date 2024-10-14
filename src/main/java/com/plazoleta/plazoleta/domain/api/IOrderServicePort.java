@@ -17,4 +17,6 @@ public interface IOrderServicePort {
 
     void deliverOrder(Long orderId, Integer reclaimCode);
 
+    void cancelOrder(Long orderId);
+
 }

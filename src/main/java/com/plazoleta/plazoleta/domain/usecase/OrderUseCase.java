@@ -51,7 +51,7 @@ public class OrderUseCase implements IOrderServicePort {
     public void assignEmployeeToOrder(Long orderId) {
         Order order = orderPersistencePort.findOrderById(orderId).orElseThrow(OrderNotFoundException::new);
         Employee employee = getAuthenticatedEmployee();
-        validateOrderStatusIsPending(order);
+        validateOrderStatusNotPending(order);
         validateIfEmployeeCanWorksInThatOrder(order, employee);
 
         orderPersistencePort.updateOrderEmployeeAssigned(order.getId(), employee.getId());
@@ -84,6 +84,18 @@ public class OrderUseCase implements IOrderServicePort {
         orderPersistencePort.updateOrderStatus(order.getId(), OrderStatus.DELIVERED);
     }
 
+
+    @Override
+    public void cancelOrder(Long orderId) {
+        Order order = orderPersistencePort.findOrderById(orderId).orElseThrow(OrderNotFoundException::new);
+        if(order.getStatus() != OrderStatus.PENDING){
+            throw new OrderNotCancelableException();
+        }
+
+        orderPersistencePort.updateOrderStatus(orderId, OrderStatus.CANCELED);
+    }
+
+
     private void validateOrderNotDelivered(Order order){
         if(order.getStatus() == OrderStatus.DELIVERED){
             throw new OrderAlreadyDelivered();
@@ -114,7 +126,7 @@ public class OrderUseCase implements IOrderServicePort {
         }
     }
 
-    private static void validateOrderStatusIsPending(Order order) {
+    private static void validateOrderStatusNotPending(Order order) {
         if(order.getStatus() != OrderStatus.PENDING){
             throw new OrderNotPendingException();
         }

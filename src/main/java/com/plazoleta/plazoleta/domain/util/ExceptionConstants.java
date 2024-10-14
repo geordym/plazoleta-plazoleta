@@ -60,5 +60,8 @@ public class ExceptionConstants {
     public static final String ORDER_ALREADY_DELIVERED_ERROR = "That order has been register as delivered";
     public static final String ORDER_ALREADY_DELIVERED_MESSAGE = "The order has beeen delivered before";
 
+    public static final String ORDER_NOT_CANCELABLE_ERROR = "That order cannot be cancelable";
+    public static final String ORDER_NOT_CANCELABLE_MESSAGE = "You only can cancel orders when his status is PENDING";
+
 }
 
