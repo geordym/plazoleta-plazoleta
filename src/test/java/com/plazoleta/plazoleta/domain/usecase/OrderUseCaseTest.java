@@ -1,13 +1,9 @@
 package com.plazoleta.plazoleta.domain.usecase;
 
 
-import com.plazoleta.plazoleta.domain.api.IOrderServicePort;
 import com.plazoleta.plazoleta.domain.enums.OrderSortBy;
 import com.plazoleta.plazoleta.domain.enums.OrderStatus;
-import com.plazoleta.plazoleta.domain.exception.OrderNotFoundException;
-import com.plazoleta.plazoleta.domain.exception.OrderNotPendingException;
-import com.plazoleta.plazoleta.domain.exception.OrderNotPreparingException;
-import com.plazoleta.plazoleta.domain.exception.UnauthorizedAccessException;
+import com.plazoleta.plazoleta.domain.exception.*;
 import com.plazoleta.plazoleta.domain.model.Order;
 import com.plazoleta.plazoleta.domain.model.Restaurant;
 import com.plazoleta.plazoleta.domain.model.external.Employee;
@@ -19,7 +15,6 @@ import com.plazoleta.plazoleta.domain.spi.IOrderPersistencePort;
 import com.plazoleta.plazoleta.domain.spi.IUserAuthenticationPort;
 import com.plazoleta.plazoleta.domain.spi.IUserConnectionPort;
 import com.plazoleta.plazoleta.domain.usecase.validator.OrderUseCaseValidator;
-import com.plazoleta.plazoleta.domain.util.Messages;
 import com.plazoleta.plazoleta.util.DataProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,10 +23,11 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 
 import java.util.Optional;
+import java.util.Random;
 
+import static com.plazoleta.plazoleta.domain.util.Constants.RECLAIM_CODE_LENGTH;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
@@ -228,5 +224,98 @@ public class OrderUseCaseTest {
         assertEquals(reclaimCodeLength, String.valueOf(reclaimCode).length(), "El código de reclamación debe tener una longitud de " + reclaimCodeLength);
         assertTrue(String.valueOf(reclaimCode).matches("\\d{6}"), "El código de reclamación debe contener solo dígitos y tener una longitud de 6");
     }
+
+    @Test
+    void testValidateReclaimCodeInvalidThrowsException(){
+        Random random = new Random();
+        int min = (int) Math.pow(10, RECLAIM_CODE_LENGTH);
+        int max = (int) Math.pow(10, RECLAIM_CODE_LENGTH + 2) - 1;
+
+        Integer reclaimCode = min + random.nextInt(max - min + 1);
+        Long orderId = 1L;
+        Order order = DataProvider.getValidOrder();
+        order.setReclaimCode(reclaimCode + 1);
+        order.setStatus(OrderStatus.READY);
+
+        when(orderPersistencePort.findOrderById(orderId)).thenReturn(Optional.of(order));
+
+        assertThrows(OrderReclaimCodeInvalidException.class, () -> orderUseCase.deliverOrder(1L, reclaimCode));
+    }
+
+    @Test
+    void testValidateReclaimCodeNotMatchesThrowsException(){
+        Integer reclaimCode = orderUseCase.generateReclaimCode();
+        Long orderId = 1L;
+        Order order = DataProvider.getValidOrder();
+        order.setReclaimCode(reclaimCode + 1);
+        order.setStatus(OrderStatus.READY);
+
+        when(orderPersistencePort.findOrderById(orderId)).thenReturn(Optional.of(order));
+
+        assertThrows(OrderReclaimCodeNotMatchesException.class, () -> orderUseCase.deliverOrder(1L, reclaimCode));
+    }
+
+    @Test
+    void testValidateReclaimCodeMatchesDoesNotThrowsException(){
+        Integer reclaimCode = orderUseCase.generateReclaimCode();
+        Long orderId = 1L;
+        Order order = DataProvider.getValidOrder();
+        order.setReclaimCode(reclaimCode);
+        order.setStatus(OrderStatus.READY);
+
+        when(orderPersistencePort.findOrderById(orderId)).thenReturn(Optional.of(order));
+
+        assertDoesNotThrow(() -> orderUseCase.deliverOrder(1L, reclaimCode));
+    }
+
+    @Test
+    void testValidateOrderNotExistsThrowsException(){
+
+        Long orderId = 1L;
+        Integer reclaimCode = orderUseCase.generateReclaimCode();
+
+        when(orderPersistencePort.findOrderById(orderId)).thenReturn(Optional.empty());
+
+        assertThrows(OrderNotFoundException.class, () -> orderUseCase.deliverOrder(orderId, reclaimCode));
+    }
+
+    @Test
+    void testValidateOrderStatusNotReadyThrowsException(){
+        Integer reclaimCode = orderUseCase.generateReclaimCode();
+        Order order = DataProvider.getValidOrder();
+        order.setReclaimCode(reclaimCode);
+        order.setStatus(OrderStatus.PREPARING);
+
+        when(orderPersistencePort.findOrderById(order.getId())).thenReturn(Optional.of(order));
+
+        assertThrows(OrderNotReadyException.class, () -> orderUseCase.deliverOrder(order.getId(), reclaimCode));
+    }
+
+    @Test
+    void testValidateOrderStatusReadyNotThrowsException(){
+        Integer reclaimCode = orderUseCase.generateReclaimCode();
+        Order order = DataProvider.getValidOrder();
+        order.setReclaimCode(reclaimCode);
+        order.setStatus(OrderStatus.READY);
+
+        when(orderPersistencePort.findOrderById(order.getId())).thenReturn(Optional.of(order));
+
+        assertDoesNotThrow(() -> orderUseCase.deliverOrder(order.getId(), reclaimCode));
+    }
+
+    @Test
+    void testValidateOrderStatusDeliveredThrowsException(){
+        Integer reclaimCode = orderUseCase.generateReclaimCode();
+        Order order = DataProvider.getValidOrder();
+        order.setReclaimCode(reclaimCode);
+        order.setStatus(OrderStatus.DELIVERED);
+
+        when(orderPersistencePort.findOrderById(order.getId())).thenReturn(Optional.of(order));
+
+        assertThrows(OrderAlreadyDelivered.class, () -> orderUseCase.deliverOrder(order.getId(), reclaimCode));
+    }
+
+
+
 
 }

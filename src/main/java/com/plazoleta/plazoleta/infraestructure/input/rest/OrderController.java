@@ -3,6 +3,7 @@ package com.plazoleta.plazoleta.infraestructure.input.rest;
 
 import com.plazoleta.plazoleta.application.dto.request.CreateDishRequestDto;
 import com.plazoleta.plazoleta.application.dto.request.CreateOrderRequestDto;
+import com.plazoleta.plazoleta.application.dto.request.OrderDeliverRequestDto;
 import com.plazoleta.plazoleta.application.dto.response.OrderResponseDto;
 import com.plazoleta.plazoleta.application.dto.response.RestaurantShortResponseDto;
 import com.plazoleta.plazoleta.application.handler.IOrderHandler;
@@ -23,6 +24,18 @@ import org.springframework.web.bind.annotation.*;
 public class OrderController {
 
     private final IOrderHandler orderHandler;
+
+    @Operation(summary = "Deliver order")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Order status changed to delivery succesfully", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Error in the body of the request", content = @Content),
+    })
+    @PostMapping("/deliver")
+    private ResponseEntity<Void> deliverOrder(@RequestBody OrderDeliverRequestDto orderDeliverRequestDto){
+        orderHandler.deliverOrder(orderDeliverRequestDto);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 
     @Operation(summary = "Notify order is ready")
     @ApiResponses(value = {

@@ -11,6 +11,38 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class DomainExceptionHandler {
 
+    @ExceptionHandler(OrderAlreadyDelivered.class)
+    public ResponseEntity<ErrorGenericResponseDto> handleOrderAlreadyDelivered(OrderAlreadyDelivered ex){
+        ErrorGenericResponseDto errorGenericResponseDto = new ErrorGenericResponseDto(ex.getError(), ex.getMessage(), ex.getTimestamps());
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(errorGenericResponseDto);
+    }
+
+    @ExceptionHandler(OrderNotReadyException.class)
+    public ResponseEntity<ErrorGenericResponseDto> handleOrderNotReadyException(OrderNotReadyException ex){
+        ErrorGenericResponseDto errorGenericResponseDto = new ErrorGenericResponseDto(ex.getError(), ex.getMessage(), ex.getTimestamps());
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(errorGenericResponseDto);
+    }
+
+    @ExceptionHandler(OrderReclaimCodeInvalidException.class)
+    public ResponseEntity<ErrorGenericResponseDto> handleOrderReclaimCodeInvalidException(OrderReclaimCodeInvalidException ex){
+        ErrorGenericResponseDto errorGenericResponseDto = new ErrorGenericResponseDto(ex.getError(), ex.getMessage(), ex.getTimestamps());
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(errorGenericResponseDto);
+    }
+
+    @ExceptionHandler(OrderReclaimCodeNotMatchesException.class)
+    public ResponseEntity<ErrorGenericResponseDto> handleOrderReclaimCodeException(OrderReclaimCodeNotMatchesException ex){
+        ErrorGenericResponseDto errorGenericResponseDto = new ErrorGenericResponseDto(ex.getError(), ex.getMessage(), ex.getTimestamps());
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(errorGenericResponseDto);
+    }
+
     @ExceptionHandler(OrderNotPreparingException.class)
     public ResponseEntity<ErrorGenericResponseDto> handleOrderNotPreparingException(OrderNotPreparingException ex){
         ErrorGenericResponseDto errorGenericResponseDto = new ErrorGenericResponseDto(ex.getError(), ex.getMessage(), ex.getTimestamps());

@@ -1,6 +1,7 @@
 package com.plazoleta.plazoleta.application.handler;
 
 import com.plazoleta.plazoleta.application.dto.request.CreateOrderRequestDto;
+import com.plazoleta.plazoleta.application.dto.request.OrderDeliverRequestDto;
 import com.plazoleta.plazoleta.application.dto.response.OrderResponseDto;
 import com.plazoleta.plazoleta.domain.enums.OrderSortBy;
 import com.plazoleta.plazoleta.domain.model.pagination.PaginationCustom;
@@ -16,5 +17,7 @@ public interface IOrderHandler {
     void assignOrderToEmployee(Long orderId);
 
     void notifyOrderIsReady(Long orderId);
+
+    void deliverOrder(OrderDeliverRequestDto orderDeliverRequestDto);
 
 }

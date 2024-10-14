@@ -15,6 +15,6 @@ public interface IOrderServicePort {
 
     void notifyClientOrderIsReady(Long orderId);
 
-    void deliverOrder();
+    void deliverOrder(Long orderId, Integer reclaimCode);
 
 }

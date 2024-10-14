@@ -48,5 +48,17 @@ public class ExceptionConstants {
     public static final String ORDER_NOT_PREPARING_ERROR = "Order is not in status preparing";
     public static final String ORDER_NOT_PREPARING_MESSAGE = "The order do you wanna to notify as ready is not in preparing status";
 
+    public static final String ORDER_RECLAIM_CODE_ERROR = "The reclaim code is not the correct";
+    public static final String ORDER_RECLAIM_CODE_MESSAGE = "The reclaim code you entered is not the correct, check it first";
+
+    public static final String ORDER_RECLAIM_CODE_INVALID_ERROR= "The reclaim code is not valid, dont have the correct length";
+    public static final String ORDER_RECLAIM_CODE_INVALID_MESSAGE = "The reclaim code you entered is not valid, check it";
+
+    public static final String ORDER_NOT_READY_ERROR = "Order is not in status ready";
+    public static final String ORDER_NOT_READY_MESSAGE = "The order do you wanna to delivery is not been in ready status first";
+
+    public static final String ORDER_ALREADY_DELIVERED_ERROR = "That order has been register as delivered";
+    public static final String ORDER_ALREADY_DELIVERED_MESSAGE = "The order has beeen delivered before";
+
 }
 

@@ -3,10 +3,7 @@ package com.plazoleta.plazoleta.domain.usecase;
 import com.plazoleta.plazoleta.domain.api.IOrderServicePort;
 import com.plazoleta.plazoleta.domain.enums.OrderSortBy;
 import com.plazoleta.plazoleta.domain.enums.OrderStatus;
-import com.plazoleta.plazoleta.domain.exception.OrderNotFoundException;
-import com.plazoleta.plazoleta.domain.exception.OrderNotPendingException;
-import com.plazoleta.plazoleta.domain.exception.OrderNotPreparingException;
-import com.plazoleta.plazoleta.domain.exception.UnauthorizedAccessException;
+import com.plazoleta.plazoleta.domain.exception.*;
 import com.plazoleta.plazoleta.domain.model.Order;
 import com.plazoleta.plazoleta.domain.model.external.Employee;
 import com.plazoleta.plazoleta.domain.model.external.User;
@@ -77,11 +74,44 @@ public class OrderUseCase implements IOrderServicePort {
         messagerConnectionPort.sendNotifySMSOrderReady(user.getPhoneNumber(), message);
     }
 
+    @Override
+    public void deliverOrder(Long orderId, Integer reclaimCode) {
+        Order order = orderPersistencePort.findOrderById(orderId).orElseThrow(OrderNotFoundException::new);
+        validateOrderNotDelivered(order);
+        validateOrderStatusIsReady(order);
+        validateReclaimCode(order, reclaimCode);
+
+        orderPersistencePort.updateOrderStatus(order.getId(), OrderStatus.DELIVERED);
+    }
+
+    private void validateOrderNotDelivered(Order order){
+        if(order.getStatus() == OrderStatus.DELIVERED){
+            throw new OrderAlreadyDelivered();
+        }
+    }
+
+    private void validateReclaimCode(Order order, Integer reclaimCode) {
+        if (String.valueOf(reclaimCode).length() != RECLAIM_CODE_LENGTH) {
+            throw new OrderReclaimCodeInvalidException();
+        }
+
+        if (!order.getReclaimCode().equals(reclaimCode)) {
+            throw new OrderReclaimCodeNotMatchesException();
+        }
+    }
+
+
     public Integer generateReclaimCode() {
         Random random = new Random();
         int min = (int) Math.pow(10, RECLAIM_CODE_LENGTH - 1);
         int max = (int) Math.pow(10, RECLAIM_CODE_LENGTH) - 1;
         return min + random.nextInt(max - min + 1);
+    }
+
+    private static void validateOrderStatusIsReady(Order order) {
+        if(order.getStatus() != OrderStatus.READY){
+            throw new OrderNotReadyException();
+        }
     }
 
     private static void validateOrderStatusIsPending(Order order) {
