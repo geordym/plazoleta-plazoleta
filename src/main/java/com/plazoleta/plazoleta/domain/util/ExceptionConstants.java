@@ -40,7 +40,7 @@ public class ExceptionConstants {
 
 
     public static final String ORDER_NOT_FOUND_ERROR = "We cannot find the order";
-    public static final String ORDER_NOT_FOUND_MESSAGE = "The order do you wanna to assign, does not exist";
+    public static final String ORDER_NOT_FOUND_MESSAGE = "The order do you wanna to do that operation not exist";
 
     public static final String ORDER_NOT_PENDING_ERROR = "Order is not in status pending";
     public static final String ORDER_NOT_PENDING_MESSAGE = "The order do you wanna to assign not have the status pending";
@@ -62,6 +62,9 @@ public class ExceptionConstants {
 
     public static final String ORDER_NOT_CANCELABLE_ERROR = "That order cannot be cancelable";
     public static final String ORDER_NOT_CANCELABLE_MESSAGE = "You only can cancel orders when his status is PENDING";
+
+    public static final String ORDER_ALREADY_CANCELED_ERROR = "That order is already canceled";
+    public static final String ORDER_ALREADY_CANCELED_MESSAGE = "You cannot cancel that order because that has been canceled ";
 
 }
 

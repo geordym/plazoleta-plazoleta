@@ -74,6 +74,8 @@ public class OrderUseCase implements IOrderServicePort {
         messagerConnectionPort.sendNotifySMSOrderReady(user.getPhoneNumber(), message);
     }
 
+
+
     @Override
     public void deliverOrder(Long orderId, Integer reclaimCode) {
         Order order = orderPersistencePort.findOrderById(orderId).orElseThrow(OrderNotFoundException::new);
@@ -88,11 +90,29 @@ public class OrderUseCase implements IOrderServicePort {
     @Override
     public void cancelOrder(Long orderId) {
         Order order = orderPersistencePort.findOrderById(orderId).orElseThrow(OrderNotFoundException::new);
+        validateIfClientIsOwnerOfOrder(order);
+        validateOrderIsNotCanceledYet(order);
+        validateOrderIsPending(order);
+
+        orderPersistencePort.updateOrderStatus(orderId, OrderStatus.CANCELED);
+    }
+
+    private void validateIfClientIsOwnerOfOrder(Order order){
+        Long clientId = userAuthenticationPort.getAuthenticatedUserId();
+        if(order.getCustomerId() != clientId){
+            throw new UnauthorizedAccessException();
+        }
+    }
+
+    private void validateOrderIsNotCanceledYet(Order order){
+        if(order.getStatus() == OrderStatus.CANCELED){
+            throw new OrderAlreadyCanceled();
+        }
+    }
+    private void validateOrderIsPending(Order order){
         if(order.getStatus() != OrderStatus.PENDING){
             throw new OrderNotCancelableException();
         }
-
-        orderPersistencePort.updateOrderStatus(orderId, OrderStatus.CANCELED);
     }
 
 

@@ -27,6 +27,18 @@ public class OrderController {
 
     @Operation(summary = "Deliver order")
     @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Order canceled succesfully", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Error in the body of the request", content = @Content),
+    })
+    @PatchMapping("/cancel/{orderId}")
+    private ResponseEntity<Void> cancelOrder(@PathVariable Long orderId){
+        orderHandler.cancelOrder(orderId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+    @Operation(summary = "Deliver order")
+    @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Order status changed to delivery succesfully", content = @Content),
             @ApiResponse(responseCode = "400", description = "Error in the body of the request", content = @Content),
     })

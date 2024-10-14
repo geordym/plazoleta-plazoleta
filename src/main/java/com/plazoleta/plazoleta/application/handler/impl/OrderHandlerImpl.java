@@ -57,5 +57,10 @@ public class OrderHandlerImpl implements IOrderHandler {
         orderServicePort.deliverOrder(orderDeliverRequestDto.getOrderId(), orderDeliverRequestDto.getReclaimCode());
     }
 
+    @Override
+    public void cancelOrder(Long orderId) {
+        orderServicePort.cancelOrder(orderId);
+    }
+
 
 }

@@ -20,4 +20,6 @@ public interface IOrderHandler {
 
     void deliverOrder(OrderDeliverRequestDto orderDeliverRequestDto);
 
+    void cancelOrder(Long orderId);
+
 }

@@ -11,6 +11,22 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class DomainExceptionHandler {
 
+    @ExceptionHandler(OrderAlreadyCanceled.class)
+    public ResponseEntity<ErrorGenericResponseDto> handleOrderAlreadyCanceled(OrderAlreadyCanceled ex){
+        ErrorGenericResponseDto errorGenericResponseDto = new ErrorGenericResponseDto(ex.getError(), ex.getMessage(), ex.getTimestamps());
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(errorGenericResponseDto);
+    }
+
+    @ExceptionHandler(OrderNotCancelableException.class)
+    public ResponseEntity<ErrorGenericResponseDto> handleOrderNotCancelableException(OrderNotCancelableException ex){
+        ErrorGenericResponseDto errorGenericResponseDto = new ErrorGenericResponseDto(ex.getError(), ex.getMessage(), ex.getTimestamps());
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(errorGenericResponseDto);
+    }
+
     @ExceptionHandler(OrderAlreadyDelivered.class)
     public ResponseEntity<ErrorGenericResponseDto> handleOrderAlreadyDelivered(OrderAlreadyDelivered ex){
         ErrorGenericResponseDto errorGenericResponseDto = new ErrorGenericResponseDto(ex.getError(), ex.getMessage(), ex.getTimestamps());
