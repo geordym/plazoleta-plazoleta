@@ -11,6 +11,55 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class DomainExceptionHandler {
 
+    @ExceptionHandler(InvalidDishForRestaurantException.class)
+    public ResponseEntity<ErrorGenericResponseDto> handleInvalidDishForRestaurantException(InvalidDishForRestaurantException ex){
+        ErrorGenericResponseDto errorGenericResponseDto = new ErrorGenericResponseDto(ex.getError(), ex.getMessage(), ex.getTimestamps());
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(errorGenericResponseDto);
+    }
+
+    @ExceptionHandler(InvalidNitException.class)
+    public ResponseEntity<ErrorGenericResponseDto> handleInvalidNitException(InvalidNitException ex){
+        ErrorGenericResponseDto errorGenericResponseDto = new ErrorGenericResponseDto(ex.getError(), ex.getMessage(), ex.getTimestamps());
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(errorGenericResponseDto);
+    }
+
+    @ExceptionHandler(RestaurantPhoneAlreadyTaken.class)
+    public ResponseEntity<ErrorGenericResponseDto> handleRestaurantPhoneAlreadyTaken(RestaurantPhoneAlreadyTaken ex){
+        ErrorGenericResponseDto errorGenericResponseDto = new ErrorGenericResponseDto(ex.getError(), ex.getMessage(), ex.getTimestamps());
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(errorGenericResponseDto);
+    }
+
+    @ExceptionHandler(RestaurantNitAlreadyTaken.class)
+    public ResponseEntity<ErrorGenericResponseDto> handleRestaurantNitAlreadyTaken(RestaurantNitAlreadyTaken ex){
+        ErrorGenericResponseDto errorGenericResponseDto = new ErrorGenericResponseDto(ex.getError(), ex.getMessage(), ex.getTimestamps());
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(errorGenericResponseDto);
+    }
+
+    @ExceptionHandler(RestaurantNameAlreadyTaken.class)
+    public ResponseEntity<ErrorGenericResponseDto> handleRestaurantNameAlreadyTaken(RestaurantNameAlreadyTaken ex){
+        ErrorGenericResponseDto errorGenericResponseDto = new ErrorGenericResponseDto(ex.getError(), ex.getMessage(), ex.getTimestamps());
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(errorGenericResponseDto);
+    }
+
+
+    @ExceptionHandler(CustomerHasActiveOrderException.class)
+    public ResponseEntity<ErrorGenericResponseDto> handleCustomerHasActiveOrderException(CustomerHasActiveOrderException ex){
+        ErrorGenericResponseDto errorGenericResponseDto = new ErrorGenericResponseDto(ex.getError(), ex.getMessage(), ex.getTimestamps());
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(errorGenericResponseDto);
+    }
+
     @ExceptionHandler(OrderAlreadyCanceled.class)
     public ResponseEntity<ErrorGenericResponseDto> handleOrderAlreadyCanceled(OrderAlreadyCanceled ex){
         ErrorGenericResponseDto errorGenericResponseDto = new ErrorGenericResponseDto(ex.getError(), ex.getMessage(), ex.getTimestamps());

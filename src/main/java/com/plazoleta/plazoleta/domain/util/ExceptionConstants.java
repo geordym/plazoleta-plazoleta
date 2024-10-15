@@ -1,8 +1,13 @@
 package com.plazoleta.plazoleta.domain.util;
 
+import static com.plazoleta.plazoleta.domain.util.Constants.NIT_MAX;
+import static com.plazoleta.plazoleta.domain.util.Constants.NIT_MIN;
+
 public class ExceptionConstants {
 
 
+    public static final String INVALID_NIT_ERROR = "The NIT is not valid";
+    public static final String INVALID_NIT_MESSAGE = "That nit cannot be accepted the nit must be in as min " + NIT_MIN + " and max in: " + NIT_MAX;
 
 
     public static final String INVALID_USER_ROLE_ERROR = "Invalid user role";
@@ -65,6 +70,15 @@ public class ExceptionConstants {
 
     public static final String ORDER_ALREADY_CANCELED_ERROR = "That order is already canceled";
     public static final String ORDER_ALREADY_CANCELED_MESSAGE = "You cannot cancel that order because that has been canceled ";
+
+    public static final String RESTAURANT_NAME_ALREADY_TAKEN_ERROR = "The restaurant name is already taken";
+    public static final String RESTAURANT_NAME_ALREADY_TAKEN_MESSAGE = "The name do you wanna to use to that restaurant is already taken, please use other";
+
+    public static final String RESTAURANT_NIT_ALREADY_TAKEN_ERROR = "The restaurant NIT is already taken";
+    public static final String RESTAURANT_NIT_ALREADY_TAKEN_MESSAGE = "The NIT do you wanna to use to that restaurant is already taken, please use other";
+
+    public static final String RESTAURANT_PHONE_ALREADY_TAKEN_ERROR = "The restaurant Phone is already taken";
+    public static final String RESTAURANT_PHONE_ALREADY_TAKEN_MESSAGE = "The Phone do you wanna to use to that restaurant is already taken, please use other";
 
 }
 

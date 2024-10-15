@@ -78,6 +78,11 @@ public class DishJpaAdapter implements IDishPersistencePort {
         return dishEntityList.stream().map(dishEntityMapper::toModel).toList();
     }
 
+    @Override
+    public boolean existsDishByName(String name) {
+        return dishRepository.existsByName(name);
+    }
+
     private List<Dish> convertToDishList(Page<DishEntity> dishEntityPage) {
         return dishEntityPage.getContent().stream()
                 .map(dishEntityMapper::toModel)

@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
 
-import static com.plazoleta.plazoleta.domain.util.Constants.NAME_NOT_ONLY_NUMBERS_REGEX;
+import static com.plazoleta.plazoleta.domain.util.Constants.*;
 import static com.plazoleta.plazoleta.domain.util.ExceptionConstants.NUMBER_PREFIX;
 import static com.plazoleta.plazoleta.domain.util.ExceptionConstants.PHONE_REGEX;
 
@@ -33,6 +33,7 @@ public class RestaurantUseCase implements IRestaurantServicePort {
 
     @Override
     public void createRestaurant(Restaurant restaurant) {
+        validateNit(restaurant.getNit());
         validatePhoneNumber(restaurant.getPhone());
         validateRestaurantName(restaurant.getName());
         ensureUserIsRestaurantOwner(restaurant.getOwnerId());
@@ -54,6 +55,15 @@ public class RestaurantUseCase implements IRestaurantServicePort {
         return restaurantPersistencePort.findAllRestaurant(paginationParams);
     }
 
+    private void validateNit(Long nit){
+        if( nit >= NIT_MIN && nit <= NIT_MAX){
+            throw new InvalidNitException();
+        }
+
+        if(restaurantPersistencePort.existsRestaurantByNit(nit)){
+            throw new RestaurantNitAlreadyTaken();
+        }
+    }
 
     private void validatePhoneNumber(String phoneNumber){
         boolean hasInitialSymbol = phoneNumber.startsWith(NUMBER_PREFIX);
@@ -65,6 +75,11 @@ public class RestaurantUseCase implements IRestaurantServicePort {
         if(!isValidPhoneNumber){
             throw new InvalidPhoneNumberException();
         }
+
+        if(restaurantPersistencePort.existsRestaurantByPhone(phoneNumber)){
+            throw new RestaurantPhoneAlreadyTaken();
+        }
+
     }
 
     private void ensureUserIsRestaurantOwner(Long userId) {
@@ -85,6 +100,11 @@ public class RestaurantUseCase implements IRestaurantServicePort {
         if (name.matches(NAME_NOT_ONLY_NUMBERS_REGEX)) {
             throw new InvalidRestaurantNameException();
         }
+
+        if(restaurantPersistencePort.existsRestaurantByName(name)){
+            throw new RestaurantNameAlreadyTaken();
+        }
+
     }
 
 

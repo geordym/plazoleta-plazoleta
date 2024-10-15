@@ -15,4 +15,9 @@ public interface IRestaurantPersistencePort {
 
     Optional<Restaurant> findRestaurantByOwnerId(Long ownerId);
 
+    boolean existsRestaurantByName(String name);
+    boolean existsRestaurantByNit(Long nit);
+    boolean existsRestaurantByPhone(String phoneNumber);
+
+
 }

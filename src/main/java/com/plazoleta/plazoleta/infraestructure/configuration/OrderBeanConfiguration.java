@@ -32,10 +32,11 @@ public class OrderBeanConfiguration {
     private final IUserConnectionPort userConnectionPort;
 
     private final IMessagerConnectionPort iMessagerConnectionPort;
+    private final ITraceabilityConnectionPort traceabilityConnectionPort;
 
     @Bean
     public IOrderServicePort orderServicePort(){
-        return new OrderUseCase(orderUseCaseValidator(), orderPersistencePort(), userAuthenticationPort, userConnectionPort, iMessagerConnectionPort);
+        return new OrderUseCase(orderUseCaseValidator(), orderPersistencePort(), userAuthenticationPort, userConnectionPort, iMessagerConnectionPort, traceabilityConnectionPort);
     }
 
     @Bean

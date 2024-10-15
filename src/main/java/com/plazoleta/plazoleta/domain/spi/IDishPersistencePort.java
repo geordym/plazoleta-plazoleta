@@ -18,4 +18,5 @@ public interface IDishPersistencePort {
     PaginationCustom<Dish> listDishByRestaurantId(DishFilter dishFilter, Long restaurantId, PaginationParams<DishEnumSortBy> paginationParams);
 
     List<Dish> findAllDishByIdAndRestaurantId(List<Long> dishList, Long restaurantId);
+
 }
